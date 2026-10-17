@@ -67,6 +67,7 @@ We are seperating locations from the task list as we intend to let users sort by
 - Home
 - School
 - Work
+
 These locations can be removed at any time, but also can have their name changed. When updating a task, users will have the ability to alter the location.
 
 #### Audit
