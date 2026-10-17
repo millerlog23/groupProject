@@ -79,8 +79,8 @@ These locations can be removed at any time, but also can have their name changed
 | Entity Changed | String | |
 | Change Type | String | |
 | Affected ID | Integer | *Validated by Server* |
-| Old Value | String | *May be Null if Create* |
-| New Value | String | *May be Null if Delete* |
+| Old Value | String | *May be Null if Create/Delete* |
+| New Value | String | *May be Null if Create/Delete* |
 
 The Audit table will be managed by the server rather than the client.
 
