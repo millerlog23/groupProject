@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:models="clr-namespace:ToTrak.App.Models"
+    x:Class="ToTrak.App.MainPage"
+    Title="ToTrak">
+
+    <Grid Padding="20"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
+          RowSpacing="12">
+
+        <Label Grid.Row="0"
+               Text="My Tasks"
+               FontSize="28"
+               FontAttributes="Bold" />
+
+        <Entry Grid.Row="1"
+               x:Name="TaskNameEntry"
+               Placeholder="Enter a task name"
+               AutomationId="TaskNameEntry" />
+
+        <DatePicker Grid.Row="2"
+                    x:Name="TaskDatePicker"
+                    AutomationId="TaskDatePicker" />
+
+        <Button Grid.Row="3"
+                x:Name="AddTaskButton"
+                Text="Add Task"
+                Clicked="OnAddTaskClicked"
+                AutomationId="AddTaskButton" />
+
+        <Label Grid.Row="4"
+               x:Name="StatusLabel"
+               Text="Loading tasks..." />
+
+        <CollectionView Grid.Row="5"
+                        x:Name="TasksCollection"
+                        SelectionMode="None"
+                        EmptyView="No tasks yet. Add your first task."
+                        AutomationId="TasksCollection">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:TaskItem">
+                    <Border Padding="12" Margin="0,4">
+                        <VerticalStackLayout Spacing="4">
+
+                            <Label Text="{Binding TaskName}"
+                                   FontSize="18"
+                                   FontAttributes="Bold" />
+
+                            <Label Text="{Binding TaskTime,
+                                        StringFormat='Date: {0:MMM dd, yyyy}'}" />
+
+                            <Label Text="{Binding Completed,
+                                        StringFormat='Completed: {0}'}" />
+                        <HorizontalStackLayout Spacing="8">
+
+                            <Button Text="Edit"
+                                 Clicked="OnEditTaskClicked"
+                                  CommandParameter="{Binding .}" />
+
+                            <Button Text="Toggle Done"
+                                Clicked="OnToggleTaskClicked"
+                                 CommandParameter="{Binding .}" />
+
+                             <Button Text="Delete"
+                                  Clicked="OnDeleteTaskClicked"
+                                     CommandParameter="{Binding .}"
+                                 BackgroundColor="DarkRed"
+                                 TextColor="White" />
+
+                        </HorizontalStackLayout>
+
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </Grid>
+</ContentPage>
