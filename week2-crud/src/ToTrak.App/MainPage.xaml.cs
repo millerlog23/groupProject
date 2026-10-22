@@ -1,26 +1,39 @@
 ﻿using ToTrak.App.Data;
 using ToTrak.App.Models;
+using Microsoft.Maui.ApplicationModel;
+using Microsoft.Maui.Devices;
+using Microsoft.Maui.Networking;
+using Microsoft.Maui.Storage;
+using System.Net.Http.Json;
 
 namespace ToTrak.App;
 
 public partial class MainPage : ContentPage
 {
     private readonly TaskDatabase database = new();
+    private readonly HttpClient httpClient;
+    private readonly SemaphoreSlim syncLock = new(1, 1);
     private const int CurrentUserId = 1;
 
     public MainPage()
     {
         InitializeComponent();
+        var defaultApiBaseUrl = DeviceInfo.Platform == DevicePlatform.Android
+            ? "http://10.0.2.2:5125/"
+            : "http://localhost:5125/";
+        var apiBaseUrl = Preferences.Get("ApiBaseUrl", defaultApiBaseUrl);
+        httpClient = new HttpClient { BaseAddress = new Uri(apiBaseUrl) };
         TaskDatePicker.Date = DateTime.Today;
     }
 
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        Connectivity.Current.ConnectivityChanged += OnConnectivityChanged;
 
         try
         {
-            await LoadTasksAsync();
+            await RefreshTasksAndSyncAsync();
         }
         catch (Exception ex)
         {
@@ -28,12 +41,94 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private async Task LoadTasksAsync()
+    protected override void OnDisappearing()
+    {
+        Connectivity.Current.ConnectivityChanged -= OnConnectivityChanged;
+        base.OnDisappearing();
+    }
+
+    private void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            try
+            {
+                await RefreshTasksAndSyncAsync();
+            }
+            catch (Exception ex)
+            {
+                StatusLabel.Text = $"Sync paused: {ex.Message}";
+            }
+        });
+    }
+
+    private async Task RefreshTasksAndSyncAsync()
+    {
+        var pendingChanges = await database.GetPendingChangesAsync(CurrentUserId);
+        bool online = Connectivity.Current.NetworkAccess != NetworkAccess.None;
+        bool syncFailed = false;
+
+        if (pendingChanges.Count > 0 && online)
+        {
+            StatusLabel.Text = $"Sending {pendingChanges.Count} audit change(s)...";
+            var syncResult = await SendPendingChangesAsync(CurrentUserId);
+            syncFailed = syncResult.Failed;
+        }
+
+        int taskCount = await LoadTasksAsync();
+        int pendingCount = (await database.GetPendingChangesAsync(CurrentUserId)).Count;
+        online = Connectivity.Current.NetworkAccess != NetworkAccess.None;
+
+        StatusLabel.Text = pendingCount == 0
+            ? $"{taskCount} task(s) • Audit changes sent"
+            : syncFailed
+                ? $"{pendingCount} audit change(s) saved locally; sending will retry"
+                : online
+                    ? $"{taskCount} task(s) • {pendingCount} audit change(s) waiting to send"
+                    : $"{taskCount} task(s) • {pendingCount} audit change(s) saved offline";
+    }
+
+    private async Task<(int SentCount, bool Failed)> SendPendingChangesAsync(int userId)
+    {
+        if (Connectivity.Current.NetworkAccess == NetworkAccess.None)
+            return (0, false);
+
+        await syncLock.WaitAsync();
+        try
+        {
+            var pendingChanges = await database.GetPendingChangesAsync(userId);
+            int sentCount = 0;
+
+            foreach (var change in pendingChanges)
+            {
+                try
+                {
+                    using var response = await httpClient.PostAsJsonAsync("api/audit", change);
+                    response.EnsureSuccessStatusCode();
+                    await database.RemovePendingChangeAsync(change.ClientChangeId);
+                    sentCount++;
+                }
+                catch (Exception exception) when (
+                    exception is HttpRequestException or TaskCanceledException)
+                {
+                    return (sentCount, true);
+                }
+            }
+
+            return (sentCount, false);
+        }
+        finally
+        {
+            syncLock.Release();
+        }
+    }
+
+    private async Task<int> LoadTasksAsync()
     {
         var tasks = await database.GetTasksAsync(CurrentUserId);
 
         TasksCollection.ItemsSource = tasks;
-        StatusLabel.Text = $"{tasks.Count} task(s)";
+        return tasks.Count;
     }
 
     private async void OnAddTaskClicked(object? sender, EventArgs e)
@@ -67,7 +162,7 @@ public partial class MainPage : ContentPage
             await database.AddTaskAsync(task);
 
             TaskNameEntry.Text = "";
-            await LoadTasksAsync();
+            await RefreshTasksAndSyncAsync();
         }
         catch (Exception ex)
         {
@@ -104,10 +199,11 @@ public partial class MainPage : ContentPage
             return;
         }
 
+        var originalTask = task.Copy();
         task.TaskName = newName.Trim();
 
-        await database.UpdateTaskAsync(task);
-        await LoadTasksAsync();
+        await database.UpdateTaskAsync(task, originalTask);
+        await RefreshTasksAndSyncAsync();
     }
     catch (Exception ex)
     {
@@ -125,10 +221,11 @@ private async void OnToggleTaskClicked(object? sender, EventArgs e)
 
     try
     {
+        var originalTask = task.Copy();
         task.Completed = !task.Completed;
 
-        await database.UpdateTaskAsync(task);
-        await LoadTasksAsync();
+        await database.UpdateTaskAsync(task, originalTask);
+        await RefreshTasksAndSyncAsync();
     }
     catch (Exception ex)
     {
@@ -158,7 +255,7 @@ private async void OnDeleteTaskClicked(object? sender, EventArgs e)
             return;
 
         await database.DeleteTaskAsync(task.UserId, task.TaskId);
-        await LoadTasksAsync();
+        await RefreshTasksAndSyncAsync();
     }
     catch (Exception ex)
     {

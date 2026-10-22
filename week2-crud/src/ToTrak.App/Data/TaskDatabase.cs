@@ -1,6 +1,9 @@
 using ToTrak.App.Models;
 using Microsoft.Maui.Storage;
 using SQLite;
+using System.Text.Json;
+using System.Net.Http.Json;
+using Microsoft.Maui.Networking;
 
 namespace ToTrak.App.Data;
 
@@ -31,6 +34,19 @@ public class TaskDatabase
                 Completed INTEGER NOT NULL,
                 LastUpdated INTEGER NOT NULL,
                 PRIMARY KEY (UserId, TaskId)
+            );
+            """);
+
+        await database.ExecuteAsync("""
+            CREATE TABLE IF NOT EXISTS PendingAuditChange
+            (
+                ClientChangeId TEXT PRIMARY KEY,
+                UserId INTEGER NOT NULL,
+                EntityChanged TEXT NOT NULL,
+                ChangeType TEXT NOT NULL,
+                AffectedId INTEGER NOT NULL,
+                OldValue TEXT NULL,
+                NewValue TEXT NULL
             );
             """);
     }
@@ -68,6 +84,20 @@ public class TaskDatabase
             task.TaskType,
             task.Completed,
             task.LastUpdated);
+
+        connection.Execute(
+            """
+            INSERT INTO PendingAuditChange
+                (ClientChangeId, UserId, EntityChanged, ChangeType, AffectedId, OldValue, NewValue)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            Guid.NewGuid().ToString("N"),
+            task.UserId,
+            "Task",
+            "Create",
+            task.TaskId,
+            null,
+            JsonSerializer.Serialize(task));
     });
 }
 
@@ -83,39 +113,96 @@ public async Task<List<TaskItem>> GetTasksAsync(int userId)
         """,
         userId);
 }
-public async Task UpdateTaskAsync(TaskItem task)
+
+public async Task<List<PendingAuditChange>> GetPendingChangesAsync(int userId)
+{
+    await InitializeAsync();
+
+    return await database.QueryAsync<PendingAuditChange>(
+        "SELECT * FROM PendingAuditChange WHERE UserId = ? ORDER BY rowid",
+        userId);
+}
+
+public async Task RemovePendingChangeAsync(string clientChangeId)
+{
+    await InitializeAsync();
+
+    await database.ExecuteAsync(
+        "DELETE FROM PendingAuditChange WHERE ClientChangeId = ?",
+        clientChangeId);
+}
+
+public async Task UpdateTaskAsync(TaskItem task, TaskItem originalTask)
 {
     await InitializeAsync();
 
     task.LastUpdated = DateTime.UtcNow;
 
-    await database.ExecuteAsync(
-        """
-        UPDATE TaskItem
-        SET TaskName = ?, TaskLocation = ?, TaskTime = ?,
-            TaskType = ?, Completed = ?, LastUpdated = ?
-        WHERE UserId = ? AND TaskId = ?
-        """,
-        task.TaskName,
-        task.TaskLocation,
-        task.TaskTime,
-        task.TaskType,
-        task.Completed,
-        task.LastUpdated,
-        task.UserId,
-        task.TaskId);
+    await database.RunInTransactionAsync(connection =>
+    {
+        connection.Execute(
+            """
+            UPDATE TaskItem
+            SET TaskName = ?, TaskLocation = ?, TaskTime = ?,
+                TaskType = ?, Completed = ?, LastUpdated = ?
+            WHERE UserId = ? AND TaskId = ?
+            """,
+            task.TaskName,
+            task.TaskLocation,
+            task.TaskTime,
+            task.TaskType,
+            task.Completed,
+            task.LastUpdated,
+            task.UserId,
+            task.TaskId);
+
+        connection.Execute(
+            """
+            INSERT INTO PendingAuditChange
+                (ClientChangeId, UserId, EntityChanged, ChangeType, AffectedId, OldValue, NewValue)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            Guid.NewGuid().ToString("N"),
+            task.UserId,
+            "Task",
+            "Update",
+            task.TaskId,
+            JsonSerializer.Serialize(originalTask),
+            JsonSerializer.Serialize(task));
+    });
 }
 
 public async Task DeleteTaskAsync(int userId, int taskId)
 {
     await InitializeAsync();
 
-    await database.ExecuteAsync(
-        """
-        DELETE FROM TaskItem
-        WHERE UserId = ? AND TaskId = ?
-        """,
+    var task = (await database.QueryAsync<TaskItem>(
+        "SELECT * FROM TaskItem WHERE UserId = ? AND TaskId = ?",
         userId,
-        taskId);
+        taskId)).FirstOrDefault();
+    if (task is null)
+        return;
+
+    await database.RunInTransactionAsync(connection =>
+    {
+        connection.Execute(
+            """
+            INSERT INTO PendingAuditChange
+                (ClientChangeId, UserId, EntityChanged, ChangeType, AffectedId, OldValue, NewValue)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+            """,
+            Guid.NewGuid().ToString("N"),
+            task.UserId,
+            "Task",
+            "Delete",
+            task.TaskId,
+            JsonSerializer.Serialize(task),
+            null);
+
+        connection.Execute(
+            "DELETE FROM TaskItem WHERE UserId = ? AND TaskId = ?",
+            userId,
+            taskId);
+    });
 }
 }

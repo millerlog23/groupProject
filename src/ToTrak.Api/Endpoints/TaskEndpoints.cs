@@ -3,6 +3,7 @@ using ToTrak.Api.Entities;
 using ToTrak.Api.Contracts.Models;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
+using AssignmentEntity = ToTrak.Api.Entities.ToTrak;
 
 namespace ToTrak.Api.Endpoints;
 
@@ -20,7 +21,7 @@ public static class AssignmentsEndpoints
     }
 
     private static async Task<Ok<List<AssignmentDto>>> GetAllAsync(
-        ToTrakDbContext database,
+        TasksDbContext database,
         CancellationToken cancellationToken)
     {
         var items = await database.Assignments.AsNoTracking()
@@ -33,7 +34,7 @@ public static class AssignmentsEndpoints
 
     private static async Task<Results<Ok<AssignmentDto>, NotFound>> GetByIdAsync(
         int id,
-        ToTrakDbContext database,
+        TasksDbContext database,
         CancellationToken cancellationToken)
     {
         var item = await database.Assignments.AsNoTracking()
@@ -46,14 +47,14 @@ public static class AssignmentsEndpoints
 
     private static async Task<Results<Created<AssignmentDto>, ValidationProblem>> CreateAsync(
         UpsertAssignmentRequest request,
-        ToTrakDbContext database,
+        TasksDbContext database,
         CancellationToken cancellationToken)
     {
         var validationProblem = ValidateDueDate(request);
         if (validationProblem is not null)
             return validationProblem;
 
-        var entity = new CourseAssignment
+        var entity = new AssignmentEntity
         {
             Title = request.Title.Trim(),
             DueDate = request.DueDate.Date,
@@ -69,7 +70,7 @@ public static class AssignmentsEndpoints
     private static async Task<Results<NoContent, NotFound, ValidationProblem>> UpdateAsync(
         int id,
         UpsertAssignmentRequest request,
-        ToTrakDbContext database,
+        TasksDbContext database,
         CancellationToken cancellationToken)
     {
         var validationProblem = ValidateDueDate(request);
@@ -89,7 +90,7 @@ public static class AssignmentsEndpoints
 
     private static async Task<Results<NoContent, NotFound>> DeleteAsync(
         int id,
-        ToTrakDbContext database,
+        TasksDbContext database,
         CancellationToken cancellationToken)
     {
         var entity = await database.Assignments.FindAsync([id], cancellationToken);
@@ -109,6 +110,6 @@ public static class AssignmentsEndpoints
             })
             : null;
 
-    private static AssignmentDto ToDto(CourseAssignment item) =>
+    private static AssignmentDto ToDto(AssignmentEntity item) =>
         new(item.AssignmentId, item.Title, item.DueDate, item.IsCompleted);
 }
