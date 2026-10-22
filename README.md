@@ -88,3 +88,8 @@ The Audit table will be managed by the server rather than the client.
 We have begun the initial stages of development after discussing where we would like the project to head. A basic application, notably featureless, was started by Biniyam. Additionally, Landry has started scaffolding the group's server. Logan has guided discussion to reach a conclusion on what to do, as well as wrote the notes for Week 1 by hand.
 
 Week 2 will have the team begin to develop the initial features, such as adding and removing data from the server, using a universal account.
+
+## Week 2
+The team is continuing to develop the application and has begun implementing CRUD (CReate, Update, Destroy). 
+
+Biniyam has created a functional portion of the application while Landry worked to implement change tracking. The features need polishing and lots of bugfixing, something that will take a great deal of time during Week 3 when we introduce extra features. Biniyam developed his portion of the project to function directly on the phone, which Landry does not have access to and had some issues with accessing. Logan has continued to try to coordinate communication to limited success and deligation while keeping up with notes.
