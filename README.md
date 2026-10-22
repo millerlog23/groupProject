@@ -93,3 +93,5 @@ Week 2 will have the team begin to develop the initial features, such as adding 
 The team is continuing to develop the application and has begun implementing CRUD (CReate, Update, Destroy). 
 
 Biniyam has created a functional portion of the application while Landry worked to implement change tracking. The features need polishing and lots of bugfixing, something that will take a great deal of time during Week 3 when we introduce extra features. Biniyam developed his portion of the project to function directly on the phone, which Landry does not have access to and had some issues with accessing. Logan has continued to try to coordinate communication to limited success and deligation while keeping up with notes.
+
+Screenshots will be included shortly.
