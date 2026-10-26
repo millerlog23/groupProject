@@ -99,10 +99,10 @@ Biniyam has created a functional portion of the application while Landry worked 
 We have screenshots for the features added. The following are included for demonstration purposes:
 
 #### Created Task
-![No Entry / Destroyed](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/task_created.jpg)
+![No Entry / Destroyed](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%202/task_created.jpg)
 
 #### Updated Task
-![No Entry / Destroyed](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/task_updated.jpg)
+![No Entry / Destroyed](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%202/task_updated.jpg)
 
 #### Destroyed Entry / No Entry
-![No Entry / Destroyed](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/no_task.jpg)
+![No Entry / Destroyed](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%202/no_task.jpg)
