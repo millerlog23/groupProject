@@ -106,3 +106,25 @@ We have screenshots for the features added. The following are included for demon
 
 #### Destroyed Entry / No Entry
 ![No Entry / Destroyed](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%202/no_task.jpg)
+
+## Week 3
+### Progress Report
+The team has continued to update the application and has begun integrating a server hosted locally. The work this week was marged into Week 2. As such, you must build both the API and the app at the same time using a build profile.
+
+Biniyam updated the server to now be seperate while Logan put it in the program. Due to Biniyam's previous work, minimal effort was required on Logan and Landry's end.
+
+### Images of Implemented Features
+The following screenshots demonstrate the implemented functionality:
+
+#### Before Push
+![Server database tables before changes pushed](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%203/step1.png)
+
+#### Pending Changes on Device
+![Changes waiting to be synced](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%203/step2.png)
+
+#### Successfull changes on device
+![Successful changes on device](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%203/step3.png)
+
+#### Server after recieving and processing changes
+Note: We struggled to get the images sepreately, so this is showing both steps.
+![Server after changes](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%203/step4_5.png)
