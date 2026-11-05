@@ -128,3 +128,22 @@ The following screenshots demonstrate the implemented functionality:
 #### Server after recieving and processing changes
 Note: We struggled to get the images sepreately, so this is showing both steps.
 ![Server after changes](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%203/step4_5.png)
+
+## Week 4
+### Progress Report
+The team has continued on the application, implementing pull and delete as requested. Biniyam handled pulling while Logan and Landry handled deleting on request. Logan also prepared the screenshots for the README.
+
+### Images of Implemented Features
+The following screenshots demonstrate the implemented functionality:
+
+#### Before Pull, with Delete Queued
+![Server Database, last entry deletes one of the values](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%204/server_delete.png)
+
+#### Before Pull, mobile app
+![Local Database before the pull deletes one of the entries](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%204/local_before.png)
+
+#### After Pull, local database recognized
+![Local Database sees pull and modifies values](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%204/local_after.png)
+
+#### After Pull, mobile application reponds
+![Application removes entry from view as it does not exist](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%204/mobile_app_reponds.png)
