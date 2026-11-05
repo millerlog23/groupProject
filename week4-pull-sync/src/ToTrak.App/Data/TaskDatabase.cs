@@ -126,12 +126,16 @@ public async Task<(int Applied, string? PauseReason)>
                 break;
             }
 
-            // Your teammate will implement this part.
-            // Pause here so this deletion is not skipped permanently.
             if (change.ChangeType == "Delete")
             {
-                pauseReason = "delete handling needs teammate integration";
-                break;
+                connection.Execute(
+                    "DELETE FROM TaskItem WHERE UserId = ? AND TaskId = ?",
+                    userId,
+                    change.AffectedId);
+
+                cursor = change.ServerChangeId;
+                applied++;
+                continue;
             }
 
             if (change.ChangeType is not ("Create" or "Update"))
