@@ -146,4 +146,4 @@ The following screenshots demonstrate the implemented functionality:
 ![Local Database sees pull and modifies values](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%204/local_after.png)
 
 #### After Pull, mobile application reponds
-![Application removes entry from view as it does not exist](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%204/mobile_app_reponds.png)
+![Application removes entry from view as it does not exist](https://github.com/millerlog23/groupProject/blob/main/Markdown%20Images/Week%204/mobile_app_responds.png?raw=true)
