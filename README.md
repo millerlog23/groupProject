@@ -146,4 +146,25 @@ The following screenshots demonstrate the implemented functionality:
 ![Local Database sees pull and modifies values](https://raw.githubusercontent.com/millerlog23/groupProject/refs/heads/main/Markdown%20Images/Week%204/local_after.png)
 
 #### After Pull, mobile application reponds
-![Application removes entry from view as it does not exist](https://github.com/millerlog23/groupProject/blob/main/Markdown%20Images/Week%204/mobile_app_responds.png?raw=true)
+![Application removes entry from view as it does not exist](https://github.com/millerlog23/groupProject/blob/main/Markdown%20Images/Week%204/mobile_app_responds.png)
+
+## Week 5
+### Progress Report
+The team has made more progress ont the application, implementing the change audit as requested. Biniyam handled the auditing and conflict handling while Logan and Landry handled the syncing. Logan also prepared the screenshots and the README.
+
+### Images of Implemented Features
+The following screenshots demonstrate the functionality we implemented:
+
+#### Evidence of Conflict Strategy Working
+![Dead Link]()
+
+#### Evidence of Audit Logging on Device
+We previously did this. Evidence still shown:
+![Dead Link]()
+
+#### Edidence of Audit Logging Synced to Server
+We also previously did this. Evidence still shown:
+![Dead Link]()
+
+#### Evidence of Automatic Sync Attempt (Online/Offline)
+![Dead Link]()
