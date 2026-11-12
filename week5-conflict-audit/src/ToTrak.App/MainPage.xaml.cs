@@ -14,6 +14,7 @@ public partial class MainPage : ContentPage
     private readonly HttpClient httpClient;
     private readonly SemaphoreSlim syncLock = new(1, 1);
     private const int CurrentUserId = 4005;
+    private bool hasInternetAccess;
 
     public MainPage()
     {
@@ -40,6 +41,7 @@ public partial class MainPage : ContentPage
     protected override async void OnAppearing()
     {
         base.OnAppearing();
+        hasInternetAccess = HasInternetAccess(Connectivity.Current.NetworkAccess);
         Connectivity.Current.ConnectivityChanged += OnConnectivityChanged;
 
         try
@@ -60,6 +62,13 @@ public partial class MainPage : ContentPage
 
     private void OnConnectivityChanged(object? sender, ConnectivityChangedEventArgs e)
     {
+        bool internetAvailable = HasInternetAccess(e.NetworkAccess);
+        bool reconnected = internetAvailable && !hasInternetAccess;
+        hasInternetAccess = internetAvailable;
+
+        if (!reconnected)
+            return;
+
         MainThread.BeginInvokeOnMainThread(async () =>
         {
             try
@@ -84,7 +93,7 @@ public partial class MainPage : ContentPage
             int pendingCount =
                 (await database.GetPendingChangesAsync(CurrentUserId)).Count;
 
-            if (Connectivity.Current.NetworkAccess == NetworkAccess.None)
+            if (!HasInternetAccess(Connectivity.Current.NetworkAccess))
             {
                 StatusLabel.Text =
                     $"{taskCount} task(s) • {pendingCount} change(s) saved offline";
@@ -132,6 +141,9 @@ public partial class MainPage : ContentPage
             syncLock.Release();
         }
     }
+
+    private static bool HasInternetAccess(NetworkAccess access) =>
+        access is NetworkAccess.Internet or NetworkAccess.ConstrainedInternet;
 
     private async Task<(int SentCount, bool Failed)>
         SendPendingChangesAsync(int userId)
