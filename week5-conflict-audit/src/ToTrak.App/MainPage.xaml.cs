@@ -222,6 +222,24 @@ public partial class MainPage : ContentPage
         return tasks.Count;
     }
 
+    private async void OnSyncNowClicked(object? sender, EventArgs e)
+    {
+        SyncNowButton.IsEnabled = false;
+
+        try
+        {
+            await RefreshTasksAndSyncAsync();
+        }
+        catch (Exception ex)
+        {
+            StatusLabel.Text = $"Sync failed: {ex.Message}";
+        }
+        finally
+        {
+            SyncNowButton.IsEnabled = true;
+        }
+    }
+
     private async void OnViewAuditClicked(object? sender, EventArgs e)
     {
         try

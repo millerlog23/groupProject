@@ -7,7 +7,7 @@
     Title="ToTrak">
 
     <Grid Padding="20"
-          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
           RowSpacing="12">
 
         <Label Grid.Row="0"
@@ -30,17 +30,11 @@
                 Clicked="OnAddTaskClicked"
                 AutomationId="AddTaskButton" />
 
-        <Button Grid.Row="4"
-                x:Name="SyncNowButton"
-                Text="Sync Now"
-                Clicked="OnSyncNowClicked"
-                AutomationId="SyncNowButton" />
-
-        <Label Grid.Row="5"
+        <Label Grid.Row="4"
                x:Name="StatusLabel"
                Text="Loading tasks..." />
 
-        <CollectionView Grid.Row="6"
+        <CollectionView Grid.Row="5"
                         x:Name="TasksCollection"
                         SelectionMode="None"
                         EmptyView="No tasks yet. Add your first task."

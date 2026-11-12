@@ -34,6 +34,11 @@
             <Label x:Name="StatusLabel"
                    Text="Loading tasks..."/>
 
+            <Button x:Name="SyncNowButton"
+                    Text="Sync Now"
+                    Clicked="OnSyncNowClicked"
+                    AutomationId="SyncNowButton"/>
+
             <Button Text="View Audit History"
                     Clicked="OnViewAuditClicked"
                     AutomationId="ViewAuditHistoryButton"/>

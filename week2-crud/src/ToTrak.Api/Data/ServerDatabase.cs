@@ -53,58 +53,6 @@ public class ServerDatabase
 
         command.ExecuteNonQuery();
     }
-
-    public Dictionary<string, List<Dictionary<string, object?>>> GetDebugSnapshot()
-    {
-        var snapshot = new Dictionary<string, List<Dictionary<string, object?>>>();
-
-        using var connection = new SqliteConnection(connectionString);
-        connection.Open();
-
-        var tableNames = new List<string>();
-        using (var tableCommand = connection.CreateCommand())
-        {
-            tableCommand.CommandText = """
-                SELECT name
-                FROM sqlite_master
-                WHERE type = 'table'
-                  AND name NOT LIKE 'sqlite_%'
-                ORDER BY name;
-                """;
-
-            using var tableReader = tableCommand.ExecuteReader();
-            while (tableReader.Read())
-            {
-                tableNames.Add(tableReader.GetString(0));
-            }
-        }
-
-        foreach (string tableName in tableNames)
-        {
-            var rows = new List<Dictionary<string, object?>>();
-            using var rowCommand = connection.CreateCommand();
-            rowCommand.CommandText = $"SELECT * FROM \"{tableName.Replace("\"", "\"\"")}\";";
-
-            using var rowReader = rowCommand.ExecuteReader();
-            while (rowReader.Read())
-            {
-                var row = new Dictionary<string, object?>();
-                for (int i = 0; i < rowReader.FieldCount; i++)
-                {
-                    row[rowReader.GetName(i)] = rowReader.IsDBNull(i)
-                        ? null
-                        : rowReader.GetValue(i);
-                }
-
-                rows.Add(row);
-            }
-
-            snapshot[tableName] = rows;
-        }
-
-        return snapshot;
-    }
-
     public bool ApplyChange(PendingAuditChange change)
 {
     // Validate the incoming change.
