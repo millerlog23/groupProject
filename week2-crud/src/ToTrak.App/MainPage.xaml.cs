@@ -66,13 +66,13 @@ public partial class MainPage : ContentPage
     {
         var pendingChanges = await database.GetPendingChangesAsync(CurrentUserId);
         bool online = Connectivity.Current.NetworkAccess != NetworkAccess.None;
-        bool syncFailed = false;
+        string? syncError = null;
 
         if (pendingChanges.Count > 0 && online)
         {
             StatusLabel.Text = $"Sending {pendingChanges.Count} audit change(s)...";
             var syncResult = await SendPendingChangesAsync(CurrentUserId);
-            syncFailed = syncResult.Failed;
+            syncError = syncResult.Error;
         }
 
         int taskCount = await LoadTasksAsync();
@@ -81,17 +81,17 @@ public partial class MainPage : ContentPage
 
         StatusLabel.Text = pendingCount == 0
             ? $"{taskCount} task(s) • Audit changes sent"
-            : syncFailed
-                ? $"{pendingCount} audit change(s) saved locally; sending will retry"
+            : syncError is not null
+                ? $"{pendingCount} audit change(s) saved locally; sync failed: {syncError}"
                 : online
                     ? $"{taskCount} task(s) • {pendingCount} audit change(s) waiting to send"
                     : $"{taskCount} task(s) • {pendingCount} audit change(s) saved offline";
     }
 
-    private async Task<(int SentCount, bool Failed)> SendPendingChangesAsync(int userId)
+    private async Task<(int SentCount, string? Error)> SendPendingChangesAsync(int userId)
     {
         if (Connectivity.Current.NetworkAccess == NetworkAccess.None)
-            return (0, false);
+            return (0, "No network connection.");
 
         await syncLock.WaitAsync();
         try
@@ -104,18 +104,28 @@ public partial class MainPage : ContentPage
                 try
                 {
                     using var response = await httpClient.PostAsJsonAsync("api/audit", change);
-                    response.EnsureSuccessStatusCode();
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        string responseBody = await response.Content.ReadAsStringAsync();
+                        return (
+                            sentCount,
+                            $"Server returned {(int)response.StatusCode} {response.ReasonPhrase}: {responseBody}");
+                    }
+
                     await database.RemovePendingChangeAsync(change.ClientChangeId);
                     sentCount++;
                 }
-                catch (Exception exception) when (
-                    exception is HttpRequestException or TaskCanceledException)
+                catch (HttpRequestException exception)
                 {
-                    return (sentCount, true);
+                    return (sentCount, exception.Message);
+                }
+                catch (TaskCanceledException)
+                {
+                    return (sentCount, "The request timed out.");
                 }
             }
 
-            return (sentCount, false);
+            return (sentCount, null);
         }
         finally
         {
@@ -129,6 +139,30 @@ public partial class MainPage : ContentPage
 
         TasksCollection.ItemsSource = tasks;
         return tasks.Count;
+    }
+
+    private async void OnSyncNowClicked(object? sender, EventArgs e)
+    {
+        SyncNowButton.IsEnabled = false;
+
+        try
+        {
+            if (Connectivity.Current.NetworkAccess == NetworkAccess.None)
+            {
+                StatusLabel.Text = "Offline; pending changes will sync when connected.";
+                return;
+            }
+
+            await RefreshTasksAndSyncAsync();
+        }
+        catch (Exception ex)
+        {
+            StatusLabel.Text = $"Sync failed: {ex.Message}";
+        }
+        finally
+        {
+            SyncNowButton.IsEnabled = true;
+        }
     }
 
     private async void OnAddTaskClicked(object? sender, EventArgs e)

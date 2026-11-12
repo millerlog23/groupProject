@@ -20,4 +20,22 @@ public partial class MainPage : ContentPage
 
 		SemanticScreenReader.Announce(CounterBtn.Text);
 	}
+
+	private async void OnSyncClicked(object? sender, EventArgs e)
+	{
+		SyncButton.IsEnabled = false;
+
+		try
+		{
+			await RefreshTasksAndSyncAsync();
+		}
+		catch (Exception ex)
+		{
+			StatusLabel.Text = $"Sync failed: {ex.Message}";
+		}
+		finally
+		{
+			SyncButton.IsEnabled = true;
+		}
+	}
 }
