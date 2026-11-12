@@ -156,15 +156,38 @@ The team has made more progress ont the application, implementing the change aud
 The following screenshots demonstrate the functionality we implemented:
 
 #### Evidence of Conflict Strategy Working
-![Dead Link]()
+We use a newest-change-wins strategy for conflicts.
+
+First, we create a task "test"...
+
+
+![Create Task](https://github.com/millerlog23/groupProject/blob/main/Markdown%20Images/Week%205/conflict1.png)
+
+Then sync it to the new device...
+
+
+![Task Synced Across Devices](https://github.com/millerlog23/groupProject/blob/main/Markdown%20Images/Week%205/conflict2.png)
+
+Then delete the task on the new device...
+
+![Task Deleted](https://github.com/millerlog23/groupProject/blob/main/Markdown%20Images/Week%205/conflict3.png)
+
+But if I set it to true on the original after, it still will sync!
+
+![Task Failed to Delete Successfully](https://github.com/millerlog23/groupProject/blob/main/Markdown%20Images/Week%205/conflict4.png)
 
 #### Evidence of Audit Logging on Device
-We previously did this. Evidence still shown:
-![Dead Link]()
+We previously did this. We have a new screen to show the logs directly.
+
+![Device Audit Screen](https://github.com/millerlog23/groupProject/blob/main/Markdown%20Images/Week%205/device_audit.png)
 
 #### Edidence of Audit Logging Synced to Server
 We also previously did this. Evidence still shown:
-![Dead Link]()
+
+![Device Audit Screen](https://github.com/millerlog23/groupProject/blob/main/Markdown%20Images/Week%205/server_audit.png)
 
 #### Evidence of Automatic Sync Attempt (Online/Offline)
-![Dead Link]()
+
+![Couldn't Sync it offline](https://github.com/millerlog23/groupProject/blob/main/Markdown%20Images/Week%205/attempt_offline_sync.png)
+
+The online version of the sync is demonstrated in the other screenshots, another is not provided here.
