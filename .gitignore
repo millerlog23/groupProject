@@ -1,0 +1,20 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/src/ToTrak.Api/.vs
+/src/ToTrak.Api
+/src/ToTrak.Api/bin/Debug/net11.0
+/src/ToTrak.Api/obj
+/src/ToTrak.Api/ToTrak.Api.csproj.user
+/src/ToTrak.Api/ToTrak.db
+/week3-server/obj
+/week3-server/obj/Debug/net11.0
+/.vs/slnx.sqlite
+/.vs/VSWorkspaceState.json
+/src/ToTrak.Api/obj/Release/net11.0/ToTrak.Api.AssemblyInfo.cs
+/src/ToTrak.Api/obj/Release/net11.0/ToTrak.Api.AssemblyInfoInputs.cache
+/src/ToTrak.Api/obj/Release/net11.0/ToTrak.Api.assets.cache
+/src/ToTrak.Api/obj/Release/net11.0/ToTrak.Api.csproj.AssemblyReference.cache
+/src/ToTrak.Api/obj/Release/net11.0/ToTrak.Api.GeneratedMSBuildEditorConfig.editorconfig

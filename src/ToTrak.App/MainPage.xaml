@@ -30,4 +30,28 @@
         </VerticalStackLayout>
     </ScrollView>
 
+    <Grid Padding="20"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,*"
+          RowSpacing="12">
+
+        <!-- Existing title, entry, date picker, and Add Task button -->
+
+        <Button Grid.Row="4"
+                x:Name="SyncButton"
+                Text="Sync now"
+                Clicked="OnSyncClicked"
+                AutomationId="SyncButton" />
+
+        <Label Grid.Row="5"
+               x:Name="StatusLabel"
+               Text="Loading tasks..." />
+
+        <CollectionView Grid.Row="6"
+                        x:Name="TasksCollection"
+                        SelectionMode="None"
+                        EmptyView="No tasks yet. Add your first task."
+                        AutomationId="TasksCollection">
+            <!-- Keep the existing item template here -->
+        </CollectionView>
+    </Grid>
 </ContentPage>
