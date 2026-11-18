@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/ToTrak.Api/ToTrak.Api.csproj" />
+    <Project Path="src/ToTrak.App/ToTrak.App.csproj" />
+  </Folder>
+</Solution>
