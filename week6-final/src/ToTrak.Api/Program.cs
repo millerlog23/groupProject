@@ -161,7 +161,7 @@ static IResult HandlePush(
     {
         return Results.BadRequest(new
         {
-            error = "NewValue must contain valid task JSON."
+            error = "NewValue must contain valid item JSON."
         });
     }
     catch (InvalidOperationException ex)

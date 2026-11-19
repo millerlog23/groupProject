@@ -4,7 +4,9 @@ public sealed class AuditEntry
 {
     public string AuditId { get; set; } = string.Empty;
     public int UserId { get; set; }
-    public long TaskId { get; set; }
+    public long? TaskId { get; set; }
+    public long? AssignmentId { get; set; }
+    public long? CourseId { get; set; }
     public string Action { get; set; } = string.Empty;
     public string? OldValue { get; set; }
     public string? NewValue { get; set; }

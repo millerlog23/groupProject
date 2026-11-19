@@ -39,6 +39,17 @@ ViewModel.RequestDeleteConfirmationAsync = task =>
         $"Delete \"{task.TaskName}\"?",
         "Delete",
         "Cancel");
+ViewModel.RequestAssignmentEditNameAsync = assignment =>
+    DisplayPromptAsync(
+        "Edit assignment",
+        "Enter the assignment name:",
+        initialValue: assignment.AssignmentName);
+ViewModel.RequestAssignmentDeleteConfirmationAsync = assignment =>
+    DisplayAlertAsync(
+        "Delete assignment",
+        $"Delete \"{assignment.AssignmentName}\"?",
+        "Delete",
+        "Cancel");
 BindingContext = ViewModel;
 
         var defaultApiBaseUrl =
@@ -110,6 +121,7 @@ BindingContext = ViewModel;
         try
         {
             int taskCount = await LoadTasksAsync();
+            int assignmentCount = ViewModel.Assignments.Count;
 
             int pendingCount =
                 (await database.GetPendingChangesAsync(CurrentUserId)).Count;
@@ -117,7 +129,8 @@ BindingContext = ViewModel;
             if (!HasInternetAccess(Connectivity.Current.NetworkAccess))
             {
                 ViewModel.StatusText =
-                    $"{taskCount} task(s) • {pendingCount} change(s) saved offline";
+                    $"{taskCount} task(s), {assignmentCount} assignment(s) • " +
+                    $"{pendingCount} change(s) saved offline";
                 return;
             }
 
@@ -139,9 +152,11 @@ BindingContext = ViewModel;
                 var pullResult = await syncService.PullChangesAsync(CurrentUserId);
 
                 taskCount = await LoadTasksAsync();
+                assignmentCount = ViewModel.Assignments.Count;
 
                 ViewModel.StatusText = pullResult.PauseReason is null
-                    ? $"{taskCount} task(s) • Sent {pushResult.SentCount}, "
+                    ? $"{taskCount} task(s), {assignmentCount} assignment(s) • " +
+                        $"Sent {pushResult.SentCount}, "
                         + $"applied {pullResult.Applied} change(s)"
                     : $"Applied {pullResult.Applied} change(s). "
                         + $"Pull paused: {pullResult.PauseReason}.";
@@ -170,12 +185,28 @@ BindingContext = ViewModel;
     private async Task<int> LoadTasksAsync()
 {
     var tasks = await database.GetTasksAsync(CurrentUserId);
+    var assignments = await database.GetAssignmentsAsync(CurrentUserId);
+    var courses = await database.GetCoursesAsync(CurrentUserId);
 
     ViewModel.Tasks.Clear();
 
     foreach (var task in tasks)
     {
         ViewModel.Tasks.Add(task);
+    }
+
+    ViewModel.Assignments.Clear();
+    ViewModel.Courses.Clear();
+    foreach (var course in courses)
+        ViewModel.Courses.Add(course);
+
+    var courseNames = courses.ToDictionary(course => course.CourseId, course => course.CourseName);
+    foreach (var assignment in assignments)
+    {
+        string courseName = courseNames.TryGetValue(assignment.CourseId, out var name)
+            ? name
+            : "Unassigned";
+        ViewModel.Assignments.Add(new AssignmentDisplayItem(assignment, courseName));
     }
 
     return tasks.Count;
@@ -227,7 +258,7 @@ BindingContext = ViewModel;
             {
                 history.Children.Add(new Label
                 {
-                    Text = "No audit records yet. Create or edit a task."
+                    Text = "No audit records yet. Create a task, assignment, or course."
                 });
             }
 
@@ -236,6 +267,11 @@ BindingContext = ViewModel;
                 string syncStatus = entry.IsSynced
                     ? "Synced to server"
                     : "Pending upload";
+                string itemId = entry.CourseId.HasValue
+                    ? $"Course {entry.CourseId}"
+                    : entry.AssignmentId.HasValue
+                        ? $"Assignment {entry.AssignmentId}"
+                        : $"Task {entry.TaskId}";
 
                 history.Children.Add(new Border
                 {
@@ -243,7 +279,7 @@ BindingContext = ViewModel;
                     Content = new Label
                     {
                         Text =
-                            $"Task {entry.TaskId} • {entry.Action}\n" +
+                            $"{itemId} • {entry.Action}\n" +
                             $"{entry.OccurredAtUtc:yyyy-MM-dd HH:mm:ss} UTC\n" +
                             $"Outcome: {entry.Outcome}\n" +
                             $"Sync: {syncStatus}\n" +

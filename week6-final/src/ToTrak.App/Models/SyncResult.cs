@@ -9,4 +9,6 @@ public sealed class SyncResult
     public string Outcome { get; set; } = string.Empty;
     public string Details { get; set; } = string.Empty;
     public TaskItem? ServerTask { get; set; }
+    public AssignmentItem? ServerAssignment { get; set; }
+    public CourseItem? ServerCourse { get; set; }
 }

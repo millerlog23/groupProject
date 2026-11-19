@@ -7,11 +7,11 @@
     Title="ToTrak">
 
     <Grid Padding="20"
-          RowDefinitions="Auto,Auto,Auto,Auto,Auto,*"
+          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,*"
           RowSpacing="12">
 
         <Label Grid.Row="0"
-               Text="My Tasks"
+                Text="My Tasks and Assignments"
                FontSize="28"
                FontAttributes="Bold"/>
 
@@ -31,7 +31,33 @@
         Text="Add Task"
         Command="{Binding AddTaskCommand}"
         AutomationId="AddTaskButton"/>
-        <VerticalStackLayout Grid.Row="4"
+        <Entry Grid.Row="4"
+               Text="{Binding AssignmentName, Mode=TwoWay}"
+               Placeholder="Enter an assignment name"
+               AutomationId="AssignmentNameEntry"/>
+
+        <DatePicker Grid.Row="5"
+                    Date="{Binding AssignmentDate, Mode=TwoWay}"
+                    AutomationId="AssignmentDatePicker"/>
+
+        <Picker Grid.Row="6"
+                Title="Select an existing course"
+                ItemsSource="{Binding Courses}"
+                ItemDisplayBinding="{Binding CourseName}"
+                SelectedItem="{Binding SelectedCourse, Mode=TwoWay}"
+                AutomationId="AssignmentCoursePicker"/>
+
+        <Entry Grid.Row="7"
+               Text="{Binding CourseName, Mode=TwoWay}"
+               Placeholder="Or enter a new course name"
+               AutomationId="NewCourseNameEntry"/>
+
+        <Button Grid.Row="8"
+                Text="Add Assignment"
+                Command="{Binding AddAssignmentCommand}"
+                AutomationId="AddAssignmentButton"/>
+
+        <VerticalStackLayout Grid.Row="9"
                 Spacing="8">
             <Label x:Name="StatusLabel"
        Text="{Binding StatusText}"/>
@@ -46,7 +72,7 @@
                     AutomationId="ViewAuditHistoryButton"/>
         </VerticalStackLayout>
 
-        <CollectionView Grid.Row="5"
+        <CollectionView Grid.Row="10"
                 x:Name="TasksCollection"
                 ItemsSource="{Binding Tasks}"
                 SelectionMode="None"
@@ -89,6 +115,45 @@
 
                             </HorizontalStackLayout>
 
+                        </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <CollectionView Grid.Row="11"
+                        ItemsSource="{Binding Assignments}"
+                        SelectionMode="None"
+                        EmptyView="No assignments yet. Add your first assignment."
+                        AutomationId="AssignmentsCollection">
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="models:AssignmentDisplayItem">
+                    <Border Padding="12" Margin="0,4">
+                        <VerticalStackLayout Spacing="4">
+                            <Label Text="{Binding AssignmentName}"
+                                   FontSize="18"
+                                   FontAttributes="Bold"/>
+                            <Label Text="{Binding CourseName, StringFormat='Course: {0}'}"/>
+                            <Label Text="{Binding AssignmentTime,
+                                         StringFormat='Date: {0:MMM dd, yyyy}'}"/>
+                            <Label Text="{Binding Completed,
+                                         StringFormat='Completed: {0}'}"/>
+                            <HorizontalStackLayout Spacing="8">
+                                <Button Text="Edit Assignment"
+                                        Command="{Binding BindingContext.EditAssignmentCommand,
+                                                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                        CommandParameter="{Binding Assignment}"/>
+                                <Button Text="Toggle Done"
+                                        Command="{Binding BindingContext.ToggleAssignmentCommand,
+                                                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                        CommandParameter="{Binding Assignment}"/>
+                                <Button Text="Delete"
+                                        Command="{Binding BindingContext.DeleteAssignmentCommand,
+                                                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                        CommandParameter="{Binding Assignment}"
+                                        BackgroundColor="DarkRed"
+                                        TextColor="White"/>
+                            </HorizontalStackLayout>
                         </VerticalStackLayout>
                     </Border>
                 </DataTemplate>
