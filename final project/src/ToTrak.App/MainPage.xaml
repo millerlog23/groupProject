@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:ToTrak.App.Models"
+             x:Class="ToTrak.App.MainPage" Title="ToTrak"
+             Shell.TabBarIsVisible="{OnPlatform Default=True, WinUI=False}">
+    <ContentPage.Resources>
+        <Style x:Key="BottomNavigationButton" TargetType="Button">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="ContentLayout" Value="Top,3" />
+            <Setter Property="MinimumHeightRequest" Value="56" />
+            <Setter Property="Padding" Value="4,6" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="BorderWidth" Value="0" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+        </Style>
+    </ContentPage.Resources>
+    <Grid Padding="20" RowDefinitions="Auto,*,Auto" RowSpacing="12">
+        <Label Text="{Binding Title, Source={RelativeSource AncestorType={x:Type ContentPage}}}" FontSize="28" FontAttributes="Bold" />
+        <ScrollView Grid.Row="1" x:Name="LoginPanel">
+            <VerticalStackLayout Spacing="12" MaximumWidthRequest="500" HorizontalOptions="Fill">
+                <Label Text="Sign in or create an account" FontSize="22" />
+                <Entry x:Name="UsernameEntry" Placeholder="Username" AutomationId="UsernameEntry" />
+                <Entry x:Name="PasswordEntry" Placeholder="Password (at least 8 characters)" IsPassword="True" AutomationId="PasswordEntry" />
+                <Button x:Name="SignInButton" Text="Sign In" Clicked="OnSignInClicked" />
+                <Button x:Name="RegisterButton" Text="Create Account" Clicked="OnRegisterClicked" />
+                <Button Text="Connection Settings (USB / Devtunnel)" Clicked="OnConnectionSettingsClicked"
+                        AutomationId="RemoteConnectionSettingsButtonLogin" />
+                <Label x:Name="LoginStatus" />
+            </VerticalStackLayout>
+        </ScrollView>
+        <Grid Grid.Row="1" x:Name="WorkspacePanel" IsVisible="False" RowDefinitions="Auto,Auto,Auto,Auto,*" RowSpacing="10">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <Label x:Name="AccountLabel" VerticalOptions="Center" />
+                <Button Grid.Column="1" Text="Sign Out" Clicked="OnSignOutClicked" />
+            </Grid>
+            <Label Grid.Row="1" Text="{Binding StatusText}" AutomationId="StatusLabel" />
+            <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Text="Sync Now" Clicked="OnSyncNowClicked" AutomationId="SyncNowButton" />
+                <Button Grid.Column="1" Text="View Audit History" Clicked="OnViewAuditClicked" />
+            </Grid>
+            <Button Grid.Row="3" Text="Connection Settings (USB / Devtunnel)"
+                    Clicked="OnConnectionSettingsClicked" AutomationId="RemoteConnectionSettingsButton" />
+            <ContentView Grid.Row="4" x:Name="WorkspaceBodyHost" />
+        </Grid>
+        <Border Grid.Row="2" IsVisible="{OnPlatform Default=False, WinUI=True}"
+                StrokeThickness="0" Padding="4,6"
+                BackgroundColor="{AppThemeBinding Light=White, Dark=#1F1F1F}">
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                <Button x:Name="TasksNavigationButton" Text="Tasks" ImageSource="nav_tasks.png"
+                        Style="{StaticResource BottomNavigationButton}" Clicked="OnTasksNavigationClicked"
+                        AutomationId="TasksNavigationButton" />
+                <Button Grid.Column="1" x:Name="AssignmentsNavigationButton" Text="Assignments" ImageSource="nav_assignments.png"
+                        Style="{StaticResource BottomNavigationButton}" Clicked="OnAssignmentsNavigationClicked"
+                        AutomationId="AssignmentsNavigationButton" />
+                <Button Grid.Column="2" x:Name="CoursesNavigationButton" Text="Courses" ImageSource="nav_courses.png"
+                        Style="{StaticResource BottomNavigationButton}" Clicked="OnCoursesNavigationClicked"
+                        AutomationId="CoursesNavigationButton" />
+            </Grid>
+        </Border>
+    </Grid>
+</ContentPage>

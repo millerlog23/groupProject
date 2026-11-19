@@ -1,0 +1,1997 @@
+﻿[
+  {
+    "id": "ffc75b366278",
+    "type": "Window",
+    "fullType": "Microsoft.Maui.Controls.Window",
+    "framework": "maui",
+    "captureEpoch": 3,
+    "registryGeneration": 0,
+    "windowId": 0,
+    "role": "window",
+    "isVisible": false,
+    "isEnabled": false,
+    "isFocused": false,
+    "opacity": 1,
+    "traits": [
+      "focusable"
+    ],
+    "state": {
+      "displayed": false,
+      "enabled": false,
+      "selected": false,
+      "focused": false,
+      "opacity": 1
+    },
+    "children": [
+      {
+        "id": "a3b51f55df97",
+        "parentId": "ffc75b366278",
+        "type": "AppShell",
+        "fullType": "ToTrak.App.AppShell",
+        "framework": "maui",
+        "captureEpoch": 3,
+        "registryGeneration": 0,
+        "windowId": 0,
+        "isVisible": true,
+        "isEnabled": true,
+        "isFocused": false,
+        "opacity": 1,
+        "state": {
+          "displayed": true,
+          "enabled": true,
+          "selected": false,
+          "focused": false,
+          "opacity": 1
+        },
+        "bounds": {
+          "x": 0,
+          "y": 0,
+          "width": -1,
+          "height": -1
+        },
+        "windowBounds": {
+          "x": 0,
+          "y": 0,
+          "width": 411.4285583496094,
+          "height": 868.5714111328125
+        },
+        "nativeType": "Microsoft.Maui.Platform.MauiDrawerLayout",
+        "nativeView": {
+          "type": "Microsoft.Maui.Platform.MauiDrawerLayout"
+        },
+        "children": [
+          {
+            "id": "FlyoutButton",
+            "parentId": "a3b51f55df97",
+            "type": "FlyoutButton",
+            "fullType": "Microsoft.Maui.DevFlow.Agent.Core.FlyoutButton",
+            "framework": "maui",
+            "captureEpoch": 3,
+            "registryGeneration": 0,
+            "windowId": 0,
+            "automationId": "FlyoutButton",
+            "text": "\u2630",
+            "isVisible": true,
+            "isEnabled": true,
+            "isFocused": false,
+            "opacity": 1,
+            "state": {
+              "displayed": true,
+              "enabled": true,
+              "selected": false,
+              "focused": false,
+              "opacity": 1
+            },
+            "bounds": {
+              "x": 0,
+              "y": 41.14285659790039,
+              "width": 411.4285583496094,
+              "height": 56
+            },
+            "windowBounds": {
+              "x": 0,
+              "y": 41.14285659790039,
+              "width": 411.4285583496094,
+              "height": 56
+            }
+          },
+          {
+            "id": "1f897d502e61",
+            "parentId": "a3b51f55df97",
+            "type": "ShellItem",
+            "fullType": "Microsoft.Maui.Controls.ShellItem",
+            "framework": "maui",
+            "captureEpoch": 3,
+            "registryGeneration": 0,
+            "windowId": 0,
+            "text": "Home",
+            "isVisible": false,
+            "isEnabled": false,
+            "isFocused": false,
+            "opacity": 1,
+            "state": {
+              "displayed": false,
+              "enabled": false,
+              "selected": false,
+              "focused": false,
+              "opacity": 1
+            },
+            "children": [
+              {
+                "id": "28063010a0b8",
+                "parentId": "1f897d502e61",
+                "type": "ShellSection",
+                "fullType": "Microsoft.Maui.Controls.ShellSection",
+                "framework": "maui",
+                "captureEpoch": 3,
+                "registryGeneration": 0,
+                "windowId": 0,
+                "text": "Home",
+                "isVisible": false,
+                "isEnabled": false,
+                "isFocused": false,
+                "opacity": 1,
+                "state": {
+                  "displayed": false,
+                  "enabled": false,
+                  "selected": false,
+                  "focused": false,
+                  "opacity": 1
+                },
+                "children": [
+                  {
+                    "id": "616029e7c8bb",
+                    "parentId": "28063010a0b8",
+                    "type": "ShellContent",
+                    "fullType": "Microsoft.Maui.Controls.ShellContent",
+                    "framework": "maui",
+                    "captureEpoch": 3,
+                    "registryGeneration": 0,
+                    "windowId": 0,
+                    "text": "Home",
+                    "isVisible": false,
+                    "isEnabled": false,
+                    "isFocused": false,
+                    "opacity": 1,
+                    "state": {
+                      "displayed": false,
+                      "enabled": false,
+                      "selected": false,
+                      "focused": false,
+                      "opacity": 1
+                    },
+                    "children": [
+                      {
+                        "id": "4058decde9af",
+                        "parentId": "616029e7c8bb",
+                        "type": "MainPage",
+                        "fullType": "ToTrak.App.MainPage",
+                        "framework": "maui",
+                        "captureEpoch": 3,
+                        "registryGeneration": 0,
+                        "windowId": 0,
+                        "isVisible": true,
+                        "isEnabled": true,
+                        "isFocused": false,
+                        "opacity": 1,
+                        "state": {
+                          "displayed": true,
+                          "enabled": true,
+                          "selected": true,
+                          "focused": false,
+                          "opacity": 1
+                        },
+                        "bounds": {
+                          "x": 0,
+                          "y": 0,
+                          "width": 411.42857142857144,
+                          "height": 771.4285714285714
+                        },
+                        "windowBounds": {
+                          "x": 0,
+                          "y": 97.14286041259766,
+                          "width": 411.4285583496094,
+                          "height": 771.4285888671875
+                        },
+                        "nativeType": "Microsoft.Maui.Platform.ContentViewGroup",
+                        "nativeView": {
+                          "type": "Microsoft.Maui.Platform.ContentViewGroup"
+                        },
+                        "children": [
+                          {
+                            "id": "30104d23eaa1",
+                            "parentId": "4058decde9af",
+                            "type": "Grid",
+                            "fullType": "Microsoft.Maui.Controls.Grid",
+                            "framework": "maui",
+                            "captureEpoch": 3,
+                            "registryGeneration": 0,
+                            "windowId": 0,
+                            "isVisible": true,
+                            "isEnabled": true,
+                            "isFocused": false,
+                            "opacity": 1,
+                            "state": {
+                              "displayed": true,
+                              "enabled": true,
+                              "selected": false,
+                              "focused": false,
+                              "opacity": 1
+                            },
+                            "bounds": {
+                              "x": 0,
+                              "y": 0,
+                              "width": 411.42857142857144,
+                              "height": 771.4285714285714
+                            },
+                            "windowBounds": {
+                              "x": 0,
+                              "y": 97.14286041259766,
+                              "width": 411.4285583496094,
+                              "height": 771.4285888671875
+                            },
+                            "nativeType": "Microsoft.Maui.Platform.LayoutViewGroup",
+                            "nativeView": {
+                              "type": "Microsoft.Maui.Platform.LayoutViewGroup"
+                            },
+                            "children": [
+                              {
+                                "id": "346765bc94cf",
+                                "parentId": "30104d23eaa1",
+                                "type": "Label",
+                                "fullType": "Microsoft.Maui.Controls.Label",
+                                "framework": "maui",
+                                "captureEpoch": 3,
+                                "registryGeneration": 0,
+                                "windowId": 0,
+                                "text": "My Tasks",
+                                "isVisible": true,
+                                "isEnabled": true,
+                                "isFocused": false,
+                                "opacity": 1,
+                                "state": {
+                                  "displayed": true,
+                                  "enabled": true,
+                                  "selected": false,
+                                  "focused": false,
+                                  "opacity": 1
+                                },
+                                "bounds": {
+                                  "x": 20,
+                                  "y": 20,
+                                  "width": 371.42857142857144,
+                                  "height": 40.76190476190476
+                                },
+                                "windowBounds": {
+                                  "x": 20.190475463867188,
+                                  "y": 117.33333587646484,
+                                  "width": 371.4285583496094,
+                                  "height": 40.761905670166016
+                                },
+                                "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                "nativeView": {
+                                  "type": "Microsoft.Maui.Platform.MauiTextView"
+                                }
+                              },
+                              {
+                                "id": "TaskNameEntry",
+                                "parentId": "30104d23eaa1",
+                                "type": "Entry",
+                                "fullType": "Microsoft.Maui.Controls.Entry",
+                                "framework": "maui",
+                                "captureEpoch": 3,
+                                "registryGeneration": 0,
+                                "windowId": 0,
+                                "automationId": "TaskNameEntry",
+                                "text": "",
+                                "role": "textbox",
+                                "isVisible": true,
+                                "isEnabled": true,
+                                "isFocused": false,
+                                "opacity": 1,
+                                "traits": [
+                                  "interactive",
+                                  "focusable"
+                                ],
+                                "state": {
+                                  "displayed": true,
+                                  "enabled": true,
+                                  "selected": false,
+                                  "focused": false,
+                                  "opacity": 1
+                                },
+                                "bounds": {
+                                  "x": 20,
+                                  "y": 72.76190476190476,
+                                  "width": 371.42857142857144,
+                                  "height": 44.19047619047619
+                                },
+                                "windowBounds": {
+                                  "x": 20.190475463867188,
+                                  "y": 169.90475463867188,
+                                  "width": 371.4285583496094,
+                                  "height": 44.19047546386719
+                                },
+                                "nativeType": "Microsoft.Maui.Platform.MauiAppCompatEditText",
+                                "nativeProperties": {
+                                  "contentDescription": "TaskNameEntry",
+                                  "inputType": "ClassText, TextFlagAutoCorrect",
+                                  "clickable": "true"
+                                },
+                                "nativeView": {
+                                  "type": "Microsoft.Maui.Platform.MauiAppCompatEditText",
+                                  "properties": {
+                                    "contentDescription": "TaskNameEntry",
+                                    "inputType": "ClassText, TextFlagAutoCorrect",
+                                    "clickable": "true"
+                                  }
+                                },
+                                "frameworkProperties": {
+                                  "IsReadOnly": "False"
+                                }
+                              },
+                              {
+                                "id": "TaskDatePicker",
+                                "parentId": "30104d23eaa1",
+                                "type": "DatePicker",
+                                "fullType": "Microsoft.Maui.Controls.DatePicker",
+                                "framework": "maui",
+                                "captureEpoch": 3,
+                                "registryGeneration": 0,
+                                "windowId": 0,
+                                "automationId": "TaskDatePicker",
+                                "value": "11/18/2026 12:00:00 AM",
+                                "isVisible": true,
+                                "isEnabled": true,
+                                "isFocused": false,
+                                "opacity": 1,
+                                "state": {
+                                  "displayed": true,
+                                  "enabled": true,
+                                  "selected": false,
+                                  "focused": false,
+                                  "opacity": 1
+                                },
+                                "bounds": {
+                                  "x": 20,
+                                  "y": 128.95238095238096,
+                                  "width": 371.42857142857144,
+                                  "height": 44.19047619047619
+                                },
+                                "windowBounds": {
+                                  "x": 20.190475463867188,
+                                  "y": 226.2857208251953,
+                                  "width": 371.4285583496094,
+                                  "height": 44.19047546386719
+                                },
+                                "nativeType": "Microsoft.Maui.Platform.MauiDatePicker",
+                                "nativeProperties": {
+                                  "contentDescription": "TaskDatePicker",
+                                  "inputType": "DatetimeVariationNormal",
+                                  "clickable": "true"
+                                },
+                                "nativeView": {
+                                  "type": "Microsoft.Maui.Platform.MauiDatePicker",
+                                  "properties": {
+                                    "contentDescription": "TaskDatePicker",
+                                    "inputType": "DatetimeVariationNormal",
+                                    "clickable": "true"
+                                  }
+                                }
+                              },
+                              {
+                                "id": "AddTaskButton",
+                                "parentId": "30104d23eaa1",
+                                "type": "Button",
+                                "fullType": "Microsoft.Maui.Controls.Button",
+                                "framework": "maui",
+                                "captureEpoch": 3,
+                                "registryGeneration": 0,
+                                "windowId": 0,
+                                "automationId": "AddTaskButton",
+                                "text": "Add Task",
+                                "role": "button",
+                                "isVisible": true,
+                                "isEnabled": true,
+                                "isFocused": false,
+                                "opacity": 1,
+                                "traits": [
+                                  "interactive",
+                                  "focusable"
+                                ],
+                                "state": {
+                                  "displayed": true,
+                                  "enabled": true,
+                                  "selected": false,
+                                  "focused": false,
+                                  "opacity": 1
+                                },
+                                "bounds": {
+                                  "x": 20,
+                                  "y": 185.14285714285717,
+                                  "width": 371.42857142857144,
+                                  "height": 44.19047619047619
+                                },
+                                "windowBounds": {
+                                  "x": 20.190475463867188,
+                                  "y": 282.28570556640625,
+                                  "width": 371.4285583496094,
+                                  "height": 44.19047546386719
+                                },
+                                "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                "nativeProperties": {
+                                  "contentDescription": "AddTaskButton",
+                                  "clickable": "true"
+                                },
+                                "nativeView": {
+                                  "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                  "properties": {
+                                    "contentDescription": "AddTaskButton",
+                                    "clickable": "true"
+                                  }
+                                }
+                              },
+                              {
+                                "id": "c377c18e3069",
+                                "parentId": "30104d23eaa1",
+                                "type": "VerticalStackLayout",
+                                "fullType": "Microsoft.Maui.Controls.VerticalStackLayout",
+                                "framework": "maui",
+                                "captureEpoch": 3,
+                                "registryGeneration": 0,
+                                "windowId": 0,
+                                "isVisible": true,
+                                "isEnabled": true,
+                                "isFocused": false,
+                                "opacity": 1,
+                                "state": {
+                                  "displayed": true,
+                                  "enabled": true,
+                                  "selected": false,
+                                  "focused": false,
+                                  "opacity": 1
+                                },
+                                "bounds": {
+                                  "x": 20,
+                                  "y": 241.33333333333337,
+                                  "width": 371.42857142857144,
+                                  "height": 124.95238095238095
+                                },
+                                "windowBounds": {
+                                  "x": 20.190475463867188,
+                                  "y": 338.6666564941406,
+                                  "width": 371.4285583496094,
+                                  "height": 124.95237731933594
+                                },
+                                "nativeType": "Microsoft.Maui.Platform.LayoutViewGroup",
+                                "nativeView": {
+                                  "type": "Microsoft.Maui.Platform.LayoutViewGroup"
+                                },
+                                "children": [
+                                  {
+                                    "id": "f6232cbfd031",
+                                    "parentId": "c377c18e3069",
+                                    "type": "Label",
+                                    "fullType": "Microsoft.Maui.Controls.Label",
+                                    "framework": "maui",
+                                    "captureEpoch": 3,
+                                    "registryGeneration": 0,
+                                    "windowId": 0,
+                                    "text": "19 task(s) \u2022 Sent 0, applied 0 change(s)",
+                                    "isVisible": true,
+                                    "isEnabled": true,
+                                    "isFocused": false,
+                                    "opacity": 1,
+                                    "state": {
+                                      "displayed": true,
+                                      "enabled": true,
+                                      "selected": false,
+                                      "focused": false,
+                                      "opacity": 1
+                                    },
+                                    "bounds": {
+                                      "x": 0,
+                                      "y": 0,
+                                      "width": 371.4285714285714,
+                                      "height": 20.571428571428573
+                                    },
+                                    "windowBounds": {
+                                      "x": 20.190475463867188,
+                                      "y": 338.6666564941406,
+                                      "width": 371.4285583496094,
+                                      "height": 20.571428298950195
+                                    },
+                                    "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                    "nativeView": {
+                                      "type": "Microsoft.Maui.Platform.MauiTextView"
+                                    }
+                                  },
+                                  {
+                                    "id": "SyncNowButton",
+                                    "parentId": "c377c18e3069",
+                                    "type": "Button",
+                                    "fullType": "Microsoft.Maui.Controls.Button",
+                                    "framework": "maui",
+                                    "captureEpoch": 3,
+                                    "registryGeneration": 0,
+                                    "windowId": 0,
+                                    "automationId": "SyncNowButton",
+                                    "text": "Sync Now",
+                                    "role": "button",
+                                    "isVisible": true,
+                                    "isEnabled": true,
+                                    "isFocused": false,
+                                    "opacity": 1,
+                                    "traits": [
+                                      "interactive",
+                                      "focusable"
+                                    ],
+                                    "state": {
+                                      "displayed": true,
+                                      "enabled": true,
+                                      "selected": false,
+                                      "focused": false,
+                                      "opacity": 1
+                                    },
+                                    "bounds": {
+                                      "x": 0,
+                                      "y": 28.571428571428573,
+                                      "width": 371.4285714285714,
+                                      "height": 44.19047619047619
+                                    },
+                                    "windowBounds": {
+                                      "x": 20.190475463867188,
+                                      "y": 367.23809814453125,
+                                      "width": 371.4285583496094,
+                                      "height": 44.19047546386719
+                                    },
+                                    "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                    "nativeProperties": {
+                                      "contentDescription": "SyncNowButton",
+                                      "clickable": "true"
+                                    },
+                                    "nativeView": {
+                                      "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                      "properties": {
+                                        "contentDescription": "SyncNowButton",
+                                        "clickable": "true"
+                                      }
+                                    }
+                                  },
+                                  {
+                                    "id": "RemoteConnectionSettingsButton",
+                                    "parentId": "c377c18e3069",
+                                    "type": "Button",
+                                    "fullType": "Microsoft.Maui.Controls.Button",
+                                    "framework": "maui",
+                                    "captureEpoch": 3,
+                                    "registryGeneration": 0,
+                                    "windowId": 0,
+                                    "automationId": "RemoteConnectionSettingsButton",
+                                    "text": "Remote Connection Settings",
+                                    "role": "button",
+                                    "isVisible": true,
+                                    "isEnabled": true,
+                                    "isFocused": false,
+                                    "opacity": 1,
+                                    "traits": [
+                                      "interactive",
+                                      "focusable"
+                                    ],
+                                    "state": {
+                                      "displayed": true,
+                                      "enabled": true,
+                                      "selected": false,
+                                      "focused": false,
+                                      "opacity": 1
+                                    },
+                                    "bounds": {
+                                      "x": 0,
+                                      "y": 80.76190476190476,
+                                      "width": 371.4285714285714,
+                                      "height": 44.19047619047619
+                                    },
+                                    "windowBounds": {
+                                      "x": 20.190475463867188,
+                                      "y": 419.4285583496094,
+                                      "width": 371.4285583496094,
+                                      "height": 44.19047546386719
+                                    },
+                                    "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                    "nativeProperties": {
+                                      "contentDescription": "RemoteConnectionSettingsButton",
+                                      "clickable": "true"
+                                    },
+                                    "nativeView": {
+                                      "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                      "properties": {
+                                        "contentDescription": "RemoteConnectionSettingsButton",
+                                        "clickable": "true"
+                                      }
+                                    }
+                                  }
+                                ]
+                              },
+                              {
+                                "id": "TasksCollection",
+                                "parentId": "30104d23eaa1",
+                                "type": "CollectionView",
+                                "fullType": "Microsoft.Maui.Controls.CollectionView",
+                                "framework": "maui",
+                                "captureEpoch": 3,
+                                "registryGeneration": 0,
+                                "windowId": 0,
+                                "automationId": "TasksCollection",
+                                "role": "list",
+                                "isVisible": true,
+                                "isEnabled": true,
+                                "isFocused": false,
+                                "opacity": 1,
+                                "traits": [
+                                  "scrollable"
+                                ],
+                                "state": {
+                                  "displayed": true,
+                                  "enabled": true,
+                                  "selected": false,
+                                  "focused": false,
+                                  "opacity": 1
+                                },
+                                "bounds": {
+                                  "x": 20,
+                                  "y": 378.28571428571433,
+                                  "width": 371.42857142857144,
+                                  "height": 325.14285714285717
+                                },
+                                "windowBounds": {
+                                  "x": 20.190475463867188,
+                                  "y": 475.4285583496094,
+                                  "width": 371.4285583496094,
+                                  "height": 325.3333435058594
+                                },
+                                "nativeType": "Microsoft.Maui.Controls.Handlers.Items.MauiRecyclerView\u00603[[Microsoft.Maui.Controls.ReorderableItemsView, Microsoft.Maui.Controls, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null],[Microsoft.Maui.Controls.Handlers.Items.GroupableItemsViewAdapter\u00602[[Microsoft.Maui.Controls.ReorderableItemsView, Microsoft.Maui.Controls, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null],[Microsoft.Maui.Controls.Handlers.Items.IGroupableItemsViewSource, Microsoft.Maui.Controls, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null]], Microsoft.Maui.Controls, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null],[Microsoft.Maui.Controls.Handlers.Items.IGroupableItemsViewSource, Microsoft.Maui.Controls, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+                                "nativeProperties": {
+                                  "contentDescription": "TasksCollection",
+                                  "itemCount": "19"
+                                },
+                                "nativeView": {
+                                  "type": "Microsoft.Maui.Controls.Handlers.Items.MauiRecyclerView\u00603[[Microsoft.Maui.Controls.ReorderableItemsView, Microsoft.Maui.Controls, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null],[Microsoft.Maui.Controls.Handlers.Items.GroupableItemsViewAdapter\u00602[[Microsoft.Maui.Controls.ReorderableItemsView, Microsoft.Maui.Controls, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null],[Microsoft.Maui.Controls.Handlers.Items.IGroupableItemsViewSource, Microsoft.Maui.Controls, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null]], Microsoft.Maui.Controls, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null],[Microsoft.Maui.Controls.Handlers.Items.IGroupableItemsViewSource, Microsoft.Maui.Controls, Version=11.0.0.0, Culture=neutral, PublicKeyToken=null]]",
+                                  "properties": {
+                                    "contentDescription": "TasksCollection",
+                                    "itemCount": "19"
+                                  }
+                                },
+                                "children": [
+                                  {
+                                    "id": "09b3369d57c3",
+                                    "parentId": "TasksCollection",
+                                    "type": "Border",
+                                    "fullType": "Microsoft.Maui.Controls.Border",
+                                    "framework": "maui",
+                                    "captureEpoch": 3,
+                                    "registryGeneration": 0,
+                                    "windowId": 0,
+                                    "isVisible": true,
+                                    "isEnabled": true,
+                                    "isFocused": false,
+                                    "opacity": 1,
+                                    "state": {
+                                      "displayed": true,
+                                      "enabled": true,
+                                      "selected": false,
+                                      "focused": false,
+                                      "opacity": 1
+                                    },
+                                    "bounds": {
+                                      "x": 0,
+                                      "y": 4,
+                                      "width": 371.42857142857144,
+                                      "height": 150.47619047619048
+                                    },
+                                    "windowBounds": {
+                                      "x": 20.190475463867188,
+                                      "y": 479.6190490722656,
+                                      "width": 371.4285583496094,
+                                      "height": 150.4761962890625
+                                    },
+                                    "nativeType": "Microsoft.Maui.Platform.ContentViewGroup",
+                                    "nativeView": {
+                                      "type": "Microsoft.Maui.Platform.ContentViewGroup"
+                                    },
+                                    "children": [
+                                      {
+                                        "id": "cb92b9cc80dc",
+                                        "parentId": "09b3369d57c3",
+                                        "type": "Rectangle",
+                                        "fullType": "Microsoft.Maui.Controls.Shapes.Rectangle",
+                                        "framework": "maui",
+                                        "captureEpoch": 3,
+                                        "registryGeneration": 0,
+                                        "windowId": 0,
+                                        "isVisible": true,
+                                        "isEnabled": true,
+                                        "isFocused": false,
+                                        "opacity": 1,
+                                        "state": {
+                                          "displayed": true,
+                                          "enabled": true,
+                                          "selected": false,
+                                          "focused": false,
+                                          "opacity": 1
+                                        },
+                                        "bounds": {
+                                          "x": 0,
+                                          "y": 0,
+                                          "width": -1,
+                                          "height": -1
+                                        }
+                                      },
+                                      {
+                                        "id": "817f7fc8b424",
+                                        "parentId": "09b3369d57c3",
+                                        "type": "VerticalStackLayout",
+                                        "fullType": "Microsoft.Maui.Controls.VerticalStackLayout",
+                                        "framework": "maui",
+                                        "captureEpoch": 3,
+                                        "registryGeneration": 0,
+                                        "windowId": 0,
+                                        "isVisible": true,
+                                        "isEnabled": true,
+                                        "isFocused": false,
+                                        "opacity": 1,
+                                        "state": {
+                                          "displayed": true,
+                                          "enabled": true,
+                                          "selected": false,
+                                          "focused": false,
+                                          "opacity": 1
+                                        },
+                                        "bounds": {
+                                          "x": 13,
+                                          "y": 13,
+                                          "width": 345.42857142857144,
+                                          "height": 124.47619047619045
+                                        },
+                                        "windowBounds": {
+                                          "x": 33.52381134033203,
+                                          "y": 492.952392578125,
+                                          "width": 345.1428527832031,
+                                          "height": 124.19047546386719
+                                        },
+                                        "nativeType": "Microsoft.Maui.Platform.LayoutViewGroup",
+                                        "nativeView": {
+                                          "type": "Microsoft.Maui.Platform.LayoutViewGroup"
+                                        },
+                                        "children": [
+                                          {
+                                            "id": "f3dbd99bc075",
+                                            "parentId": "817f7fc8b424",
+                                            "type": "Label",
+                                            "fullType": "Microsoft.Maui.Controls.Label",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "text": "phone edit - newer wins",
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 0,
+                                              "width": 345.14285714285717,
+                                              "height": 26.666666666666668
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 492.952392578125,
+                                              "width": 345.1428527832031,
+                                              "height": 26.66666603088379
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.MauiTextView"
+                                            }
+                                          },
+                                          {
+                                            "id": "9a10dba555a4",
+                                            "parentId": "817f7fc8b424",
+                                            "type": "Label",
+                                            "fullType": "Microsoft.Maui.Controls.Label",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "text": "Date: Nov 11, 2026",
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 30.666666666666668,
+                                              "width": 345.14285714285717,
+                                              "height": 20.571428571428573
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 523.8095092773438,
+                                              "width": 345.1428527832031,
+                                              "height": 20.571428298950195
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.MauiTextView"
+                                            }
+                                          },
+                                          {
+                                            "id": "407d57a33dc0",
+                                            "parentId": "817f7fc8b424",
+                                            "type": "Label",
+                                            "fullType": "Microsoft.Maui.Controls.Label",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "text": "Completed: True",
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 55.23809523809524,
+                                              "width": 345.14285714285717,
+                                              "height": 20.571428571428573
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 548.1904907226562,
+                                              "width": 345.1428527832031,
+                                              "height": 20.571428298950195
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.MauiTextView"
+                                            }
+                                          },
+                                          {
+                                            "id": "c708b37579df",
+                                            "parentId": "817f7fc8b424",
+                                            "type": "HorizontalStackLayout",
+                                            "fullType": "Microsoft.Maui.Controls.HorizontalStackLayout",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 79.80952380952381,
+                                              "width": 345.14285714285717,
+                                              "height": 44.19047619047619
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 572.952392578125,
+                                              "width": 345.1428527832031,
+                                              "height": 44.19047546386719
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.LayoutViewGroup",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.LayoutViewGroup"
+                                            },
+                                            "children": [
+                                              {
+                                                "id": "e6ffada35d6d",
+                                                "parentId": "c708b37579df",
+                                                "type": "Button",
+                                                "fullType": "Microsoft.Maui.Controls.Button",
+                                                "framework": "maui",
+                                                "captureEpoch": 3,
+                                                "registryGeneration": 0,
+                                                "windowId": 0,
+                                                "text": "Edit",
+                                                "role": "button",
+                                                "isVisible": true,
+                                                "isEnabled": true,
+                                                "isFocused": false,
+                                                "opacity": 1,
+                                                "traits": [
+                                                  "interactive",
+                                                  "focusable"
+                                                ],
+                                                "state": {
+                                                  "displayed": true,
+                                                  "enabled": true,
+                                                  "selected": false,
+                                                  "focused": false,
+                                                  "opacity": 1
+                                                },
+                                                "bounds": {
+                                                  "x": 0,
+                                                  "y": 0,
+                                                  "width": 55.23809523809524,
+                                                  "height": 44.19047619047619
+                                                },
+                                                "windowBounds": {
+                                                  "x": 33.52381134033203,
+                                                  "y": 572.952392578125,
+                                                  "width": 55.238094329833984,
+                                                  "height": 44.19047546386719
+                                                },
+                                                "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                "nativeProperties": {
+                                                  "clickable": "true"
+                                                },
+                                                "nativeView": {
+                                                  "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                  "properties": {
+                                                    "clickable": "true"
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "id": "ebb357ed35ac",
+                                                "parentId": "c708b37579df",
+                                                "type": "Button",
+                                                "fullType": "Microsoft.Maui.Controls.Button",
+                                                "framework": "maui",
+                                                "captureEpoch": 3,
+                                                "registryGeneration": 0,
+                                                "windowId": 0,
+                                                "text": "Toggle Done",
+                                                "role": "button",
+                                                "isVisible": true,
+                                                "isEnabled": true,
+                                                "isFocused": false,
+                                                "opacity": 1,
+                                                "traits": [
+                                                  "interactive",
+                                                  "focusable"
+                                                ],
+                                                "state": {
+                                                  "displayed": true,
+                                                  "enabled": true,
+                                                  "selected": false,
+                                                  "focused": false,
+                                                  "opacity": 1
+                                                },
+                                                "bounds": {
+                                                  "x": 63.23809523809524,
+                                                  "y": 0,
+                                                  "width": 116.57142857142857,
+                                                  "height": 44.19047619047619
+                                                },
+                                                "windowBounds": {
+                                                  "x": 96.76190185546875,
+                                                  "y": 572.952392578125,
+                                                  "width": 116.57142639160156,
+                                                  "height": 44.19047546386719
+                                                },
+                                                "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                "nativeProperties": {
+                                                  "clickable": "true"
+                                                },
+                                                "nativeView": {
+                                                  "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                  "properties": {
+                                                    "clickable": "true"
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "id": "d0b4c17563b9",
+                                                "parentId": "c708b37579df",
+                                                "type": "Button",
+                                                "fullType": "Microsoft.Maui.Controls.Button",
+                                                "framework": "maui",
+                                                "captureEpoch": 3,
+                                                "registryGeneration": 0,
+                                                "windowId": 0,
+                                                "text": "Delete",
+                                                "role": "button",
+                                                "isVisible": true,
+                                                "isEnabled": true,
+                                                "isFocused": false,
+                                                "opacity": 1,
+                                                "traits": [
+                                                  "interactive",
+                                                  "focusable"
+                                                ],
+                                                "state": {
+                                                  "displayed": true,
+                                                  "enabled": true,
+                                                  "selected": false,
+                                                  "focused": false,
+                                                  "opacity": 1
+                                                },
+                                                "bounds": {
+                                                  "x": 187.8095238095238,
+                                                  "y": 0,
+                                                  "width": 73.52380952380952,
+                                                  "height": 44.19047619047619
+                                                },
+                                                "windowBounds": {
+                                                  "x": 221.3333282470703,
+                                                  "y": 572.952392578125,
+                                                  "width": 73.52381134033203,
+                                                  "height": 44.19047546386719
+                                                },
+                                                "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                "nativeProperties": {
+                                                  "clickable": "true"
+                                                },
+                                                "nativeView": {
+                                                  "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                  "properties": {
+                                                    "clickable": "true"
+                                                  }
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "7ec773de4be5",
+                                    "parentId": "TasksCollection",
+                                    "type": "Border",
+                                    "fullType": "Microsoft.Maui.Controls.Border",
+                                    "framework": "maui",
+                                    "captureEpoch": 3,
+                                    "registryGeneration": 0,
+                                    "windowId": 0,
+                                    "isVisible": true,
+                                    "isEnabled": true,
+                                    "isFocused": false,
+                                    "opacity": 1,
+                                    "state": {
+                                      "displayed": true,
+                                      "enabled": true,
+                                      "selected": false,
+                                      "focused": false,
+                                      "opacity": 1
+                                    },
+                                    "bounds": {
+                                      "x": 0,
+                                      "y": 4,
+                                      "width": 371.42857142857144,
+                                      "height": 150.47619047619048
+                                    },
+                                    "windowBounds": {
+                                      "x": 20.190475463867188,
+                                      "y": 638.09521484375,
+                                      "width": 371.4285583496094,
+                                      "height": 150.4761962890625
+                                    },
+                                    "nativeType": "Microsoft.Maui.Platform.ContentViewGroup",
+                                    "nativeView": {
+                                      "type": "Microsoft.Maui.Platform.ContentViewGroup"
+                                    },
+                                    "children": [
+                                      {
+                                        "id": "cb92b9cc80dc",
+                                        "parentId": "7ec773de4be5",
+                                        "type": "Rectangle",
+                                        "fullType": "Microsoft.Maui.Controls.Shapes.Rectangle",
+                                        "framework": "maui",
+                                        "captureEpoch": 3,
+                                        "registryGeneration": 0,
+                                        "windowId": 0,
+                                        "isVisible": true,
+                                        "isEnabled": true,
+                                        "isFocused": false,
+                                        "opacity": 1,
+                                        "state": {
+                                          "displayed": true,
+                                          "enabled": true,
+                                          "selected": false,
+                                          "focused": false,
+                                          "opacity": 1
+                                        },
+                                        "bounds": {
+                                          "x": 0,
+                                          "y": 0,
+                                          "width": -1,
+                                          "height": -1
+                                        }
+                                      },
+                                      {
+                                        "id": "440604a26ad4",
+                                        "parentId": "7ec773de4be5",
+                                        "type": "VerticalStackLayout",
+                                        "fullType": "Microsoft.Maui.Controls.VerticalStackLayout",
+                                        "framework": "maui",
+                                        "captureEpoch": 3,
+                                        "registryGeneration": 0,
+                                        "windowId": 0,
+                                        "isVisible": true,
+                                        "isEnabled": true,
+                                        "isFocused": false,
+                                        "opacity": 1,
+                                        "state": {
+                                          "displayed": true,
+                                          "enabled": true,
+                                          "selected": false,
+                                          "focused": false,
+                                          "opacity": 1
+                                        },
+                                        "bounds": {
+                                          "x": 13,
+                                          "y": 13,
+                                          "width": 345.42857142857144,
+                                          "height": 124.47619047619045
+                                        },
+                                        "windowBounds": {
+                                          "x": 33.52381134033203,
+                                          "y": 651.4285888671875,
+                                          "width": 345.1428527832031,
+                                          "height": 124.19047546386719
+                                        },
+                                        "nativeType": "Microsoft.Maui.Platform.LayoutViewGroup",
+                                        "nativeView": {
+                                          "type": "Microsoft.Maui.Platform.LayoutViewGroup"
+                                        },
+                                        "children": [
+                                          {
+                                            "id": "9d069535cab7",
+                                            "parentId": "440604a26ad4",
+                                            "type": "Label",
+                                            "fullType": "Microsoft.Maui.Controls.Label",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "text": "MVVM Add Task Test",
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 0,
+                                              "width": 345.14285714285717,
+                                              "height": 26.666666666666668
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 651.4285888671875,
+                                              "width": 345.1428527832031,
+                                              "height": 26.66666603088379
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.MauiTextView"
+                                            }
+                                          },
+                                          {
+                                            "id": "cc6842bc840e",
+                                            "parentId": "440604a26ad4",
+                                            "type": "Label",
+                                            "fullType": "Microsoft.Maui.Controls.Label",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "text": "Date: Nov 18, 2026",
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 30.666666666666668,
+                                              "width": 345.14285714285717,
+                                              "height": 20.571428571428573
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 682.2857055664062,
+                                              "width": 345.1428527832031,
+                                              "height": 20.571428298950195
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.MauiTextView"
+                                            }
+                                          },
+                                          {
+                                            "id": "4368e28ea08e",
+                                            "parentId": "440604a26ad4",
+                                            "type": "Label",
+                                            "fullType": "Microsoft.Maui.Controls.Label",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "text": "Completed: True",
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 55.23809523809524,
+                                              "width": 345.14285714285717,
+                                              "height": 20.571428571428573
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 706.6666870117188,
+                                              "width": 345.1428527832031,
+                                              "height": 20.571428298950195
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.MauiTextView"
+                                            }
+                                          },
+                                          {
+                                            "id": "2e451898637c",
+                                            "parentId": "440604a26ad4",
+                                            "type": "HorizontalStackLayout",
+                                            "fullType": "Microsoft.Maui.Controls.HorizontalStackLayout",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 79.80952380952381,
+                                              "width": 345.14285714285717,
+                                              "height": 44.19047619047619
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 731.4285888671875,
+                                              "width": 345.1428527832031,
+                                              "height": 44.19047546386719
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.LayoutViewGroup",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.LayoutViewGroup"
+                                            },
+                                            "children": [
+                                              {
+                                                "id": "7d45d7a7bf80",
+                                                "parentId": "2e451898637c",
+                                                "type": "Button",
+                                                "fullType": "Microsoft.Maui.Controls.Button",
+                                                "framework": "maui",
+                                                "captureEpoch": 3,
+                                                "registryGeneration": 0,
+                                                "windowId": 0,
+                                                "text": "Edit",
+                                                "role": "button",
+                                                "isVisible": true,
+                                                "isEnabled": true,
+                                                "isFocused": false,
+                                                "opacity": 1,
+                                                "traits": [
+                                                  "interactive",
+                                                  "focusable"
+                                                ],
+                                                "state": {
+                                                  "displayed": true,
+                                                  "enabled": true,
+                                                  "selected": false,
+                                                  "focused": false,
+                                                  "opacity": 1
+                                                },
+                                                "bounds": {
+                                                  "x": 0,
+                                                  "y": 0,
+                                                  "width": 55.23809523809524,
+                                                  "height": 44.19047619047619
+                                                },
+                                                "windowBounds": {
+                                                  "x": 33.52381134033203,
+                                                  "y": 731.4285888671875,
+                                                  "width": 55.238094329833984,
+                                                  "height": 44.19047546386719
+                                                },
+                                                "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                "nativeProperties": {
+                                                  "clickable": "true"
+                                                },
+                                                "nativeView": {
+                                                  "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                  "properties": {
+                                                    "clickable": "true"
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "id": "8bf6b87d43df",
+                                                "parentId": "2e451898637c",
+                                                "type": "Button",
+                                                "fullType": "Microsoft.Maui.Controls.Button",
+                                                "framework": "maui",
+                                                "captureEpoch": 3,
+                                                "registryGeneration": 0,
+                                                "windowId": 0,
+                                                "text": "Toggle Done",
+                                                "role": "button",
+                                                "isVisible": true,
+                                                "isEnabled": true,
+                                                "isFocused": false,
+                                                "opacity": 1,
+                                                "traits": [
+                                                  "interactive",
+                                                  "focusable"
+                                                ],
+                                                "state": {
+                                                  "displayed": true,
+                                                  "enabled": true,
+                                                  "selected": false,
+                                                  "focused": false,
+                                                  "opacity": 1
+                                                },
+                                                "bounds": {
+                                                  "x": 63.23809523809524,
+                                                  "y": 0,
+                                                  "width": 116.57142857142857,
+                                                  "height": 44.19047619047619
+                                                },
+                                                "windowBounds": {
+                                                  "x": 96.76190185546875,
+                                                  "y": 731.4285888671875,
+                                                  "width": 116.57142639160156,
+                                                  "height": 44.19047546386719
+                                                },
+                                                "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                "nativeProperties": {
+                                                  "clickable": "true"
+                                                },
+                                                "nativeView": {
+                                                  "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                  "properties": {
+                                                    "clickable": "true"
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "id": "7c9b43dcacef",
+                                                "parentId": "2e451898637c",
+                                                "type": "Button",
+                                                "fullType": "Microsoft.Maui.Controls.Button",
+                                                "framework": "maui",
+                                                "captureEpoch": 3,
+                                                "registryGeneration": 0,
+                                                "windowId": 0,
+                                                "text": "Delete",
+                                                "role": "button",
+                                                "isVisible": true,
+                                                "isEnabled": true,
+                                                "isFocused": false,
+                                                "opacity": 1,
+                                                "traits": [
+                                                  "interactive",
+                                                  "focusable"
+                                                ],
+                                                "state": {
+                                                  "displayed": true,
+                                                  "enabled": true,
+                                                  "selected": false,
+                                                  "focused": false,
+                                                  "opacity": 1
+                                                },
+                                                "bounds": {
+                                                  "x": 187.8095238095238,
+                                                  "y": 0,
+                                                  "width": 73.52380952380952,
+                                                  "height": 44.19047619047619
+                                                },
+                                                "windowBounds": {
+                                                  "x": 221.3333282470703,
+                                                  "y": 731.4285888671875,
+                                                  "width": 73.52381134033203,
+                                                  "height": 44.19047546386719
+                                                },
+                                                "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                "nativeProperties": {
+                                                  "clickable": "true"
+                                                },
+                                                "nativeView": {
+                                                  "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                  "properties": {
+                                                    "clickable": "true"
+                                                  }
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  },
+                                  {
+                                    "id": "d8334f1d1ca0",
+                                    "parentId": "TasksCollection",
+                                    "type": "Border",
+                                    "fullType": "Microsoft.Maui.Controls.Border",
+                                    "framework": "maui",
+                                    "captureEpoch": 3,
+                                    "registryGeneration": 0,
+                                    "windowId": 0,
+                                    "isVisible": true,
+                                    "isEnabled": true,
+                                    "isFocused": false,
+                                    "opacity": 1,
+                                    "state": {
+                                      "displayed": true,
+                                      "enabled": true,
+                                      "selected": false,
+                                      "focused": false,
+                                      "opacity": 1
+                                    },
+                                    "bounds": {
+                                      "x": 0,
+                                      "y": 4,
+                                      "width": 371.42857142857144,
+                                      "height": 150.47619047619048
+                                    },
+                                    "windowBounds": {
+                                      "x": 20.190475463867188,
+                                      "y": 796.5714111328125,
+                                      "width": 371.4285583496094,
+                                      "height": 150.4761962890625
+                                    },
+                                    "nativeType": "Microsoft.Maui.Platform.ContentViewGroup",
+                                    "nativeView": {
+                                      "type": "Microsoft.Maui.Platform.ContentViewGroup"
+                                    },
+                                    "children": [
+                                      {
+                                        "id": "cb92b9cc80dc",
+                                        "parentId": "d8334f1d1ca0",
+                                        "type": "Rectangle",
+                                        "fullType": "Microsoft.Maui.Controls.Shapes.Rectangle",
+                                        "framework": "maui",
+                                        "captureEpoch": 3,
+                                        "registryGeneration": 0,
+                                        "windowId": 0,
+                                        "isVisible": true,
+                                        "isEnabled": true,
+                                        "isFocused": false,
+                                        "opacity": 1,
+                                        "state": {
+                                          "displayed": true,
+                                          "enabled": true,
+                                          "selected": false,
+                                          "focused": false,
+                                          "opacity": 1
+                                        },
+                                        "bounds": {
+                                          "x": 0,
+                                          "y": 0,
+                                          "width": -1,
+                                          "height": -1
+                                        }
+                                      },
+                                      {
+                                        "id": "6ea647ae3395",
+                                        "parentId": "d8334f1d1ca0",
+                                        "type": "VerticalStackLayout",
+                                        "fullType": "Microsoft.Maui.Controls.VerticalStackLayout",
+                                        "framework": "maui",
+                                        "captureEpoch": 3,
+                                        "registryGeneration": 0,
+                                        "windowId": 0,
+                                        "isVisible": true,
+                                        "isEnabled": true,
+                                        "isFocused": false,
+                                        "opacity": 1,
+                                        "state": {
+                                          "displayed": true,
+                                          "enabled": true,
+                                          "selected": false,
+                                          "focused": false,
+                                          "opacity": 1
+                                        },
+                                        "bounds": {
+                                          "x": 13,
+                                          "y": 13,
+                                          "width": 345.42857142857144,
+                                          "height": 124.47619047619045
+                                        },
+                                        "windowBounds": {
+                                          "x": 33.52381134033203,
+                                          "y": 809.90478515625,
+                                          "width": 345.1428527832031,
+                                          "height": 124.19047546386719
+                                        },
+                                        "nativeType": "Microsoft.Maui.Platform.LayoutViewGroup",
+                                        "nativeView": {
+                                          "type": "Microsoft.Maui.Platform.LayoutViewGroup"
+                                        },
+                                        "children": [
+                                          {
+                                            "id": "5fcebe5779cc",
+                                            "parentId": "6ea647ae3395",
+                                            "type": "Label",
+                                            "fullType": "Microsoft.Maui.Controls.Label",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "text": "Append Only Audit Updated",
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 0,
+                                              "width": 345.14285714285717,
+                                              "height": 26.666666666666668
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 809.90478515625,
+                                              "width": 345.1428527832031,
+                                              "height": 26.66666603088379
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.MauiTextView"
+                                            }
+                                          },
+                                          {
+                                            "id": "31607db10195",
+                                            "parentId": "6ea647ae3395",
+                                            "type": "Label",
+                                            "fullType": "Microsoft.Maui.Controls.Label",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "text": "Date: Nov 18, 2026",
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 30.666666666666668,
+                                              "width": 345.14285714285717,
+                                              "height": 20.571428571428573
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 840.7619018554688,
+                                              "width": 345.1428527832031,
+                                              "height": 20.571428298950195
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.MauiTextView"
+                                            }
+                                          },
+                                          {
+                                            "id": "7fdfe714a82c",
+                                            "parentId": "6ea647ae3395",
+                                            "type": "Label",
+                                            "fullType": "Microsoft.Maui.Controls.Label",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "text": "Completed: False",
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 55.23809523809524,
+                                              "width": 345.14285714285717,
+                                              "height": 20.571428571428573
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 865.1428833007812,
+                                              "width": 345.1428527832031,
+                                              "height": 20.571428298950195
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.MauiTextView",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.MauiTextView"
+                                            }
+                                          },
+                                          {
+                                            "id": "28829bde44ad",
+                                            "parentId": "6ea647ae3395",
+                                            "type": "HorizontalStackLayout",
+                                            "fullType": "Microsoft.Maui.Controls.HorizontalStackLayout",
+                                            "framework": "maui",
+                                            "captureEpoch": 3,
+                                            "registryGeneration": 0,
+                                            "windowId": 0,
+                                            "isVisible": true,
+                                            "isEnabled": true,
+                                            "isFocused": false,
+                                            "opacity": 1,
+                                            "state": {
+                                              "displayed": true,
+                                              "enabled": true,
+                                              "selected": false,
+                                              "focused": false,
+                                              "opacity": 1
+                                            },
+                                            "bounds": {
+                                              "x": 0,
+                                              "y": 79.80952380952381,
+                                              "width": 345.14285714285717,
+                                              "height": 44.19047619047619
+                                            },
+                                            "windowBounds": {
+                                              "x": 33.52381134033203,
+                                              "y": 889.90478515625,
+                                              "width": 345.1428527832031,
+                                              "height": 44.19047546386719
+                                            },
+                                            "nativeType": "Microsoft.Maui.Platform.LayoutViewGroup",
+                                            "nativeView": {
+                                              "type": "Microsoft.Maui.Platform.LayoutViewGroup"
+                                            },
+                                            "children": [
+                                              {
+                                                "id": "6af781970c73",
+                                                "parentId": "28829bde44ad",
+                                                "type": "Button",
+                                                "fullType": "Microsoft.Maui.Controls.Button",
+                                                "framework": "maui",
+                                                "captureEpoch": 3,
+                                                "registryGeneration": 0,
+                                                "windowId": 0,
+                                                "text": "Edit",
+                                                "role": "button",
+                                                "isVisible": true,
+                                                "isEnabled": true,
+                                                "isFocused": false,
+                                                "opacity": 1,
+                                                "traits": [
+                                                  "interactive",
+                                                  "focusable"
+                                                ],
+                                                "state": {
+                                                  "displayed": true,
+                                                  "enabled": true,
+                                                  "selected": false,
+                                                  "focused": false,
+                                                  "opacity": 1
+                                                },
+                                                "bounds": {
+                                                  "x": 0,
+                                                  "y": 0,
+                                                  "width": 55.23809523809524,
+                                                  "height": 44.19047619047619
+                                                },
+                                                "windowBounds": {
+                                                  "x": 33.52381134033203,
+                                                  "y": 889.90478515625,
+                                                  "width": 55.238094329833984,
+                                                  "height": 44.19047546386719
+                                                },
+                                                "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                "nativeProperties": {
+                                                  "clickable": "true"
+                                                },
+                                                "nativeView": {
+                                                  "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                  "properties": {
+                                                    "clickable": "true"
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "id": "ddc3ba2e71c7",
+                                                "parentId": "28829bde44ad",
+                                                "type": "Button",
+                                                "fullType": "Microsoft.Maui.Controls.Button",
+                                                "framework": "maui",
+                                                "captureEpoch": 3,
+                                                "registryGeneration": 0,
+                                                "windowId": 0,
+                                                "text": "Toggle Done",
+                                                "role": "button",
+                                                "isVisible": true,
+                                                "isEnabled": true,
+                                                "isFocused": false,
+                                                "opacity": 1,
+                                                "traits": [
+                                                  "interactive",
+                                                  "focusable"
+                                                ],
+                                                "state": {
+                                                  "displayed": true,
+                                                  "enabled": true,
+                                                  "selected": false,
+                                                  "focused": false,
+                                                  "opacity": 1
+                                                },
+                                                "bounds": {
+                                                  "x": 63.23809523809524,
+                                                  "y": 0,
+                                                  "width": 116.57142857142857,
+                                                  "height": 44.19047619047619
+                                                },
+                                                "windowBounds": {
+                                                  "x": 96.76190185546875,
+                                                  "y": 889.90478515625,
+                                                  "width": 116.57142639160156,
+                                                  "height": 44.19047546386719
+                                                },
+                                                "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                "nativeProperties": {
+                                                  "clickable": "true"
+                                                },
+                                                "nativeView": {
+                                                  "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                  "properties": {
+                                                    "clickable": "true"
+                                                  }
+                                                }
+                                              },
+                                              {
+                                                "id": "cca46606459c",
+                                                "parentId": "28829bde44ad",
+                                                "type": "Button",
+                                                "fullType": "Microsoft.Maui.Controls.Button",
+                                                "framework": "maui",
+                                                "captureEpoch": 3,
+                                                "registryGeneration": 0,
+                                                "windowId": 0,
+                                                "text": "Delete",
+                                                "role": "button",
+                                                "isVisible": true,
+                                                "isEnabled": true,
+                                                "isFocused": false,
+                                                "opacity": 1,
+                                                "traits": [
+                                                  "interactive",
+                                                  "focusable"
+                                                ],
+                                                "state": {
+                                                  "displayed": true,
+                                                  "enabled": true,
+                                                  "selected": false,
+                                                  "focused": false,
+                                                  "opacity": 1
+                                                },
+                                                "bounds": {
+                                                  "x": 187.8095238095238,
+                                                  "y": 0,
+                                                  "width": 73.52380952380952,
+                                                  "height": 44.19047619047619
+                                                },
+                                                "windowBounds": {
+                                                  "x": 221.3333282470703,
+                                                  "y": 889.90478515625,
+                                                  "width": 73.52381134033203,
+                                                  "height": 44.19047546386719
+                                                },
+                                                "nativeType": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                "nativeProperties": {
+                                                  "clickable": "true"
+                                                },
+                                                "nativeView": {
+                                                  "type": "Microsoft.Maui.Platform.MauiMaterialButton",
+                                                  "properties": {
+                                                    "clickable": "true"
+                                                  }
+                                                }
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      }
+                                    ]
+                                  }
+                                ]
+                              }
+                            ]
+                          },
+                          {
+                            "id": "NavBarTitle_4058decde9af",
+                            "parentId": "4058decde9af",
+                            "type": "NavBarTitle",
+                            "fullType": "Microsoft.Maui.DevFlow.Agent.Core.NavBarTitle",
+                            "framework": "maui",
+                            "captureEpoch": 3,
+                            "registryGeneration": 0,
+                            "windowId": 0,
+                            "text": "ToTrak",
+                            "isVisible": true,
+                            "isEnabled": false,
+                            "isFocused": false,
+                            "opacity": 1,
+                            "state": {
+                              "displayed": true,
+                              "enabled": false,
+                              "selected": false,
+                              "focused": false,
+                              "opacity": 1
+                            },
+                            "bounds": {
+                              "x": 0,
+                              "y": 41.14285659790039,
+                              "width": 411.4285583496094,
+                              "height": 56
+                            },
+                            "windowBounds": {
+                              "x": 0,
+                              "y": 41.14285659790039,
+                              "width": 411.4285583496094,
+                              "height": 56
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          },
+          {
+            "id": "NavBarTitle_a3b51f55df97",
+            "parentId": "a3b51f55df97",
+            "type": "NavBarTitle",
+            "fullType": "Microsoft.Maui.DevFlow.Agent.Core.NavBarTitle",
+            "framework": "maui",
+            "captureEpoch": 3,
+            "registryGeneration": 0,
+            "windowId": 0,
+            "text": "ToTrak.App",
+            "isVisible": true,
+            "isEnabled": false,
+            "isFocused": false,
+            "opacity": 1,
+            "state": {
+              "displayed": true,
+              "enabled": false,
+              "selected": false,
+              "focused": false,
+              "opacity": 1
+            },
+            "bounds": {
+              "x": 0,
+              "y": 41.14285659790039,
+              "width": 411.4285583496094,
+              "height": 56
+            },
+            "windowBounds": {
+              "x": 0,
+              "y": 41.14285659790039,
+              "width": 411.4285583496094,
+              "height": 56
+            }
+          },
+          {
+            "id": "FlyoutItem_IMPL_MainPage",
+            "parentId": "a3b51f55df97",
+            "type": "FlyoutItem",
+            "fullType": "Microsoft.Maui.DevFlow.Agent.Core.FlyoutItem",
+            "framework": "maui",
+            "captureEpoch": 3,
+            "registryGeneration": 0,
+            "windowId": 0,
+            "text": "Home",
+            "isVisible": true,
+            "isEnabled": true,
+            "isFocused": true,
+            "opacity": 1,
+            "traits": [
+              "focusable"
+            ],
+            "state": {
+              "displayed": true,
+              "enabled": true,
+              "selected": true,
+              "focused": true,
+              "opacity": 1
+            },
+            "nativeProperties": {
+              "route": "IMPL_MainPage"
+            },
+            "nativeView": {
+              "properties": {
+                "route": "IMPL_MainPage"
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+]

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<local:MainPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:local="clr-namespace:ToTrak.App"
+                xmlns:models="clr-namespace:ToTrak.App.Models"
+                x:Class="ToTrak.App.AssignmentsPage"
+                Title="Assignments">
+    <local:MainPage.WorkspaceBody>
+        <ScrollView>
+            <VerticalStackLayout Spacing="12">
+                <Button Text="Add Assignment" Clicked="OnAddAssignmentClicked" AutomationId="AddAssignmentButton" />
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Assignments}" BindableLayout.EmptyView="No assignments yet.">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:AssignmentDisplayItem">
+                            <Border Padding="12" Margin="0,4">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="{Binding AssignmentName}" FontSize="18" FontAttributes="Bold" />
+                                    <Label Text="{Binding CourseName, StringFormat='Course: {0}'}" />
+                                    <Label Text="{Binding AssignmentTime, StringFormat='Due: {0:MMM dd, yyyy HH:mm}'}" />
+                                    <Label Text="{Binding AssignmentType, StringFormat='Type: {0}'}" />
+                                    <Label Text="{Binding AssignmentDescription}" />
+                                    <Label Text="{Binding EstimatedTime}" />
+                                    <Label Text="{Binding Completed, StringFormat='Completed: {0}'}" />
+                                    <FlexLayout Wrap="Wrap">
+                                        <Button Text="Edit" Clicked="OnEditAssignmentClicked" CommandParameter="{Binding Assignment}" Margin="0,0,6,0" />
+                                        <Button Text="Toggle Done" Clicked="OnToggleAssignmentClicked" CommandParameter="{Binding Assignment}" Margin="0,0,6,0" />
+                                        <Button Text="Delete" Clicked="OnDeleteAssignmentClicked" CommandParameter="{Binding Assignment}" />
+                                    </FlexLayout>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </local:MainPage.WorkspaceBody>
+</local:MainPage>

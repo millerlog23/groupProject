@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<local:MainPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:local="clr-namespace:ToTrak.App"
+                xmlns:models="clr-namespace:ToTrak.App.Models"
+                x:Class="ToTrak.App.TasksPage"
+                Title="Tasks">
+    <local:MainPage.WorkspaceBody>
+        <ScrollView>
+            <VerticalStackLayout Spacing="12">
+                <Button Text="Add Task" Clicked="OnAddTaskClicked" AutomationId="AddTaskButton" />
+                <Picker x:Name="TaskSortPicker" Title="Sort tasks" SelectedIndex="{Binding TaskSortIndex, Mode=TwoWay}" SelectedIndexChanged="OnTaskSortChanged">
+                    <Picker.Items><x:String>Time</x:String><x:String>Location</x:String><x:String>Type</x:String></Picker.Items>
+                </Picker>
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Tasks}" BindableLayout.EmptyView="No tasks yet.">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:TaskDisplayItem">
+                            <Border Padding="12" Margin="0,4">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="{Binding TaskName}" FontSize="18" FontAttributes="Bold" />
+                                    <Label Text="{Binding TaskTime, StringFormat='Time: {0:MMM dd, yyyy HH:mm}'}" />
+                                    <Label Text="{Binding TaskType, StringFormat='Type: {0}'}" />
+                                    <Label Text="{Binding LocationName, StringFormat='Location: {0}'}" />
+                                    <Label Text="{Binding Completed, StringFormat='Completed: {0}'}" />
+                                    <FlexLayout Wrap="Wrap">
+                                        <Button Text="Edit" Clicked="OnEditTaskClicked" CommandParameter="{Binding Task}" Margin="0,0,6,0" />
+                                        <Button Text="Toggle Done" Clicked="OnToggleTaskClicked" CommandParameter="{Binding Task}" Margin="0,0,6,0" />
+                                        <Button Text="Delete" Clicked="OnDeleteTaskClicked" CommandParameter="{Binding Task}" />
+                                    </FlexLayout>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+                <Label Text="Locations" FontSize="22" FontAttributes="Bold" />
+                <Button Text="Add Location" Clicked="OnAddLocationClicked" />
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Locations}" BindableLayout.EmptyView="No locations. Tasks can use Unset.">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:LocationItem">
+                            <Border Padding="12" Margin="0,4">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="{Binding LocationName}" FontSize="18" />
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Button Text="Rename" Clicked="OnEditLocationClicked" CommandParameter="{Binding .}" />
+                                        <Button Text="Delete" Clicked="OnDeleteLocationClicked" CommandParameter="{Binding .}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </local:MainPage.WorkspaceBody>
+</local:MainPage>
