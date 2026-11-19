@@ -1,0 +1,8 @@
+Navigation icons: nav_tasks.svg, nav_assignments.svg, nav_courses.svg
+
+These original icon assets were created for ToTrak and are dedicated to the
+public domain under CC0 1.0 Universal. They may be used, modified and distributed
+for any purpose, including commercial use, without attribution.
+
+SPDX-License-Identifier: CC0-1.0
+License: https://creativecommons.org/publicdomain/zero/1.0/

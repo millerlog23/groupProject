@@ -39,6 +39,7 @@ public class TaskItem
 
 public sealed class PendingAuditChange
 {
+    public long? OriginalAffectedId { get; set; }
     public string ClientChangeId { get; set; } = string.Empty;
 
     public int UserId { get; set; }
@@ -54,6 +55,8 @@ public sealed class PendingAuditChange
     public long? AssignmentId { get; set; }
 
     public long? CourseId { get; set; }
+
+    public int? LocationId { get; set; }
 
     public string? OldValue { get; set; }
 

@@ -18,6 +18,8 @@ public sealed class PendingAuditChange
 
     public long? CourseId { get; set; }
 
+    public int? LocationId { get; set; }
+
     public string? OldValue { get; set; }
 
     public string? NewValue { get; set; }

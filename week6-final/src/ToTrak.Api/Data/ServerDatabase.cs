@@ -4,7 +4,7 @@ using Microsoft.Data.Sqlite;
 
 namespace ToTrak.Api.Data;
 
-public class ServerDatabase
+public partial class ServerDatabase
 {
     private readonly string connectionString;
 
@@ -79,6 +79,7 @@ public class ServerDatabase
             """;
 
         command.ExecuteNonQuery();
+        InitializeDomainSchema(connection);
         // Preserve deleted tasks so older changes cannot restore them.
         EnsureColumn(
             connection, "Tasks", "IsDeleted",
@@ -155,7 +156,7 @@ public class ServerDatabase
         }
     }
 
-    public Dictionary<string, List<Dictionary<string, object?>>> GetDebugSnapshot()
+    public Dictionary<string, List<Dictionary<string, object?>>> GetDebugSnapshot(int userId)
     {
         var snapshot = new Dictionary<string, List<Dictionary<string, object?>>>();
 
@@ -182,9 +183,13 @@ public class ServerDatabase
 
         foreach (string tableName in tableNames)
         {
+            if (tableName is "Users" or "Sessions") continue;
             var rows = new List<Dictionary<string, object?>>();
             using var rowCommand = connection.CreateCommand();
             rowCommand.CommandText = $"SELECT * FROM \"{tableName.Replace("\"", "\"\"")}\";";
+
+            rowCommand.CommandText = rowCommand.CommandText.TrimEnd(';') + " WHERE UserId = $userId;";
+            rowCommand.Parameters.AddWithValue("$userId", userId);
 
             using var rowReader = rowCommand.ExecuteReader();
             while (rowReader.Read())
@@ -245,7 +250,7 @@ public class ServerDatabase
         SELECT ServerChangeId, ClientChangeId, UserId,
                 TaskId, AssignmentId, CourseId, ChangeType, OldValue, NewValue,
                ChangedAtUtc, DeviceId, Outcome, Details,
-               WasConflict, ReceivedAt, ServerValue
+               WasConflict, ReceivedAt, ServerValue, EntityChanged, AffectedId, LocationId
         FROM ReceivedChanges
         WHERE UserId = $userId
         ORDER BY ServerChangeId DESC
@@ -261,6 +266,12 @@ public class ServerDatabase
         {
             entries.Add(new
             {
+                ChangeId = reader.GetInt64(0),
+                ChangeTime = reader.GetString(14),
+                EntityChanged = reader.GetString(16),
+                AffectedId = reader.GetInt64(17),
+                LocationId = reader.IsDBNull(18) ? (int?)null : reader.GetInt32(18),
+                ChangeType = reader.GetString(6),
                 ServerChangeId = reader.GetInt64(0),
                 AuditId = reader.GetString(1),
                 UserId = reader.GetInt32(2),
@@ -295,7 +306,7 @@ public class ServerDatabase
         command.CommandText = """
         SELECT ServerChangeId, ClientChangeId, UserId,
            EntityChanged, ChangeType, AffectedId, TaskId, AssignmentId, CourseId,
-           COALESCE(ServerValue, NewValue), ReceivedAt
+           COALESCE(ServerValue, NewValue), ReceivedAt, LocationId
          FROM ReceivedChanges
          WHERE UserId = $userId
          AND ServerChangeId > $after
@@ -330,7 +341,8 @@ public class ServerDatabase
                 NewValue = reader.IsDBNull(9)
                     ? null
                     : reader.GetString(9),
-                ReceivedAt = reader.GetString(10)
+                ReceivedAt = reader.GetString(10),
+                LocationId = reader.IsDBNull(11) ? null : reader.GetInt32(11)
             });
         }
 
@@ -340,18 +352,18 @@ public class ServerDatabase
     {
         if (change.EntityChanged == "Assignment")
             return ApplyAssignmentChange(change);
-        if (change.EntityChanged == "Course")
-            return ApplyCourseChange(change);
+        if (change.EntityChanged is "Course" or "Location")
+            return ApplyNamedChange(change);
 
         if (change.EntityChanged != "Task")
-            throw new ArgumentException("Only Task, Assignment, and Course changes are supported.");
+            throw new ArgumentException("Only Task, Assignment, Course, and Location changes are supported.");
 
         if (string.IsNullOrWhiteSpace(change.ClientChangeId))
             throw new ArgumentException("ClientChangeId is required.");
 
         if (change.UserId <= 0 || change.AffectedId <= 0 ||
             change.TaskId != change.AffectedId || change.AssignmentId is not null ||
-            change.CourseId is not null)
+            change.CourseId is not null || change.LocationId is not null)
             throw new ArgumentException("User ID and task ID must be positive.");
 
         if (change.ChangeType is not ("Create" or "Update" or "Delete"))
@@ -380,7 +392,8 @@ public class ServerDatabase
         if (incoming is null ||
             incoming.UserId != change.UserId ||
             incoming.TaskId != change.AffectedId ||
-            string.IsNullOrWhiteSpace(incoming.TaskName))
+            string.IsNullOrWhiteSpace(incoming.TaskName) ||
+            string.IsNullOrWhiteSpace(incoming.TaskType) || incoming.TaskTime == default || incoming.TaskLocation < 0)
         {
             throw new ArgumentException("Invalid task snapshot.");
         }
@@ -516,6 +529,9 @@ public class ServerDatabase
                     ? "Incoming version has the newer UTC timestamp."
                     : "Server version has the newer UTC timestamp.";
 
+        if (incomingWins && !incoming.IsDeleted)
+            ValidateTaskLocation(connection, transaction, incoming.UserId, incoming.TaskLocation);
+
         if (incomingWins)
         {
             using var save = connection.CreateCommand();
@@ -586,7 +602,7 @@ public class ServerDatabase
         audit.Parameters.AddWithValue("$action", change.ChangeType);
         audit.Parameters.AddWithValue("$taskId", change.AffectedId);
         audit.Parameters.AddWithValue(
-            "$old", (object?)change.OldValue ?? DBNull.Value);
+            "$old", current is null ? DBNull.Value : (object)JsonSerializer.Serialize(current));
         audit.Parameters.AddWithValue("$new", change.NewValue);
         audit.Parameters.AddWithValue("$received", DateTime.UtcNow.ToString("O"));
         audit.Parameters.AddWithValue("$changed", change.ChangedAtUtc.ToString("O"));
@@ -616,7 +632,7 @@ public class ServerDatabase
 
         if (change.UserId <= 0 || change.AffectedId <= 0 ||
             change.AssignmentId != change.AffectedId || change.TaskId is not null ||
-            change.CourseId is not null)
+            change.CourseId is not null || change.LocationId is not null)
             throw new ArgumentException("User ID and assignment ID must be positive.");
 
         if (change.ChangeType is not ("Create" or "Update" or "Delete"))
@@ -640,6 +656,8 @@ public class ServerDatabase
             incoming.AssignmentId != change.AffectedId ||
             incoming.CourseId <= 0 ||
             string.IsNullOrWhiteSpace(incoming.AssignmentName) ||
+            string.IsNullOrWhiteSpace(incoming.AssignmentType) || incoming.AssignmentTime == default ||
+            incoming.EstimatedTime < 0 ||
             incoming.LastUpdated.Kind != DateTimeKind.Utc ||
             incoming.LastUpdated != change.ChangedAtUtc ||
             incoming.LastModifiedBy != change.DeviceId ||
@@ -699,7 +717,7 @@ public class ServerDatabase
                 """;
             courseCheck.Parameters.AddWithValue("$userId", change.UserId);
             courseCheck.Parameters.AddWithValue("$courseId", incoming.CourseId);
-            if (Convert.ToInt32(courseCheck.ExecuteScalar()) != 1)
+            if (!incoming.IsDeleted && Convert.ToInt32(courseCheck.ExecuteScalar()) != 1)
                 throw new ArgumentException("The assignment references an unknown course.");
         }
 
@@ -709,7 +727,7 @@ public class ServerDatabase
             lookup.CommandText = """
                 SELECT UserId, AssignmentId, AssignmentName, CourseId, AssignmentLocation,
                        AssignmentTime, AssignmentType, Completed, LastUpdated,
-                       IsDeleted, LastModifiedBy
+                       IsDeleted, LastModifiedBy, AssignmentDescription, EstimatedTime
                 FROM Assignments WHERE UserId = $userId AND AssignmentId = $id;
                 """;
             lookup.Parameters.AddWithValue("$userId", change.UserId);
@@ -733,7 +751,9 @@ public class ServerDatabase
                         System.Globalization.CultureInfo.InvariantCulture,
                         System.Globalization.DateTimeStyles.RoundtripKind),
                     IsDeleted = reader.GetInt32(9) != 0,
-                    LastModifiedBy = reader.GetString(10)
+                    LastModifiedBy = reader.GetString(10),
+                    AssignmentDescription = reader.IsDBNull(11) ? null : reader.GetString(11),
+                    EstimatedTime = reader.IsDBNull(12) ? null : reader.GetInt32(12)
                 };
             }
         }
@@ -763,13 +783,15 @@ public class ServerDatabase
                 (
                     UserId, AssignmentId, AssignmentName, CourseId, AssignmentLocation,
                     AssignmentTime, AssignmentType, Completed, LastUpdated,
-                    IsDeleted, LastModifiedBy
+                    IsDeleted, LastModifiedBy, AssignmentDescription, EstimatedTime
                 )
                 VALUES ($userId, $id, $name, $courseId, $location, $time, $type,
-                        $completed, $updated, $deleted, $device)
+                        $completed, $updated, $deleted, $device, $description, $estimated)
                 ON CONFLICT(UserId, AssignmentId) DO UPDATE SET
                     AssignmentName = excluded.AssignmentName,
                     CourseId = excluded.CourseId,
+                    AssignmentDescription = excluded.AssignmentDescription,
+                    EstimatedTime = excluded.EstimatedTime,
                     AssignmentLocation = excluded.AssignmentLocation,
                     AssignmentTime = excluded.AssignmentTime,
                     AssignmentType = excluded.AssignmentType,
@@ -783,6 +805,8 @@ public class ServerDatabase
             save.Parameters.AddWithValue("$name", winner.AssignmentName);
             save.Parameters.AddWithValue("$courseId", winner.CourseId);
             save.Parameters.AddWithValue("$location", winner.AssignmentLocation);
+            save.Parameters.AddWithValue("$description", (object?)winner.AssignmentDescription ?? DBNull.Value);
+            save.Parameters.AddWithValue("$estimated", (object?)winner.EstimatedTime ?? DBNull.Value);
             save.Parameters.AddWithValue("$time", winner.AssignmentTime.ToString("O"));
             save.Parameters.AddWithValue("$type", winner.AssignmentType);
             save.Parameters.AddWithValue("$completed", winner.Completed ? 1 : 0);
@@ -814,7 +838,7 @@ public class ServerDatabase
             audit.Parameters.AddWithValue("$action", change.ChangeType);
             audit.Parameters.AddWithValue("$affectedId", change.AffectedId);
             audit.Parameters.AddWithValue("$assignmentId", change.AffectedId);
-            audit.Parameters.AddWithValue("$old", (object?)change.OldValue ?? DBNull.Value);
+            audit.Parameters.AddWithValue("$old", current is null ? DBNull.Value : (object)JsonSerializer.Serialize(current));
             audit.Parameters.AddWithValue("$new", change.NewValue);
             audit.Parameters.AddWithValue("$received", DateTime.UtcNow.ToString("O"));
             audit.Parameters.AddWithValue("$changed", change.ChangedAtUtc.ToString("O"));
@@ -837,165 +861,4 @@ public class ServerDatabase
         };
     }
 
-    private SyncResult ApplyCourseChange(PendingAuditChange change)
-    {
-        if (string.IsNullOrWhiteSpace(change.ClientChangeId) ||
-            change.UserId <= 0 || change.AffectedId <= 0 ||
-            change.CourseId != change.AffectedId ||
-            change.TaskId is not null || change.AssignmentId is not null)
-            throw new ArgumentException("A valid Course ID is required.");
-        if (change.ChangeType != "Create")
-            throw new ArgumentException("Only Course creation is supported.");
-        if (change.ChangedAtUtc == default ||
-            change.ChangedAtUtc.Kind != DateTimeKind.Utc ||
-            string.IsNullOrWhiteSpace(change.DeviceId) ||
-            string.IsNullOrWhiteSpace(change.NewValue))
-            throw new ArgumentException("Course change metadata and snapshot are required.");
-
-        var jsonOptions = new JsonSerializerOptions
-        {
-            PropertyNameCaseInsensitive = true
-        };
-        var incoming = JsonSerializer.Deserialize<CourseItem>(change.NewValue, jsonOptions);
-        if (incoming is null || incoming.UserId != change.UserId ||
-            incoming.CourseId != change.AffectedId ||
-            string.IsNullOrWhiteSpace(incoming.CourseName) ||
-            incoming.LastUpdated != change.ChangedAtUtc ||
-            incoming.LastUpdated.Kind != DateTimeKind.Utc ||
-            incoming.LastModifiedBy != change.DeviceId || incoming.IsDeleted)
-            throw new ArgumentException("Invalid Course snapshot.");
-
-        using var connection = new SqliteConnection(connectionString);
-        connection.Open();
-        using var transaction = connection.BeginTransaction();
-
-        SyncResult? previous = null;
-        using (var retry = connection.CreateCommand())
-        {
-            retry.Transaction = transaction;
-            retry.CommandText = """
-                SELECT UserId, Outcome, Details, WasConflict, ServerValue
-                FROM ReceivedChanges WHERE ClientChangeId = $id;
-                """;
-            retry.Parameters.AddWithValue("$id", change.ClientChangeId);
-            using (var reader = retry.ExecuteReader())
-            {
-                if (reader.Read())
-                {
-                    if (reader.GetInt32(0) != change.UserId)
-                        throw new ArgumentException("ClientChangeId belongs to another user.");
-                    previous = new SyncResult
-                    {
-                        ClientChangeId = change.ClientChangeId,
-                        AlreadyProcessed = true,
-                        Outcome = reader.GetString(1),
-                        Details = reader.GetString(2),
-                        WasConflict = reader.GetInt32(3) != 0,
-                        ServerCourse = reader.IsDBNull(4)
-                            ? null
-                            : JsonSerializer.Deserialize<CourseItem>(reader.GetString(4), jsonOptions)
-                    };
-                }
-            }
-            if (previous is not null)
-            {
-                transaction.Commit();
-                return previous;
-            }
-        }
-
-        CourseItem? current = null;
-        using (var lookup = connection.CreateCommand())
-        {
-            lookup.Transaction = transaction;
-            lookup.CommandText = """
-                SELECT UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy
-                FROM Courses WHERE UserId = $userId AND CourseId = $courseId;
-                """;
-            lookup.Parameters.AddWithValue("$userId", change.UserId);
-            lookup.Parameters.AddWithValue("$courseId", change.AffectedId);
-            using var reader = lookup.ExecuteReader();
-            if (reader.Read())
-                current = new CourseItem
-                {
-                    UserId = reader.GetInt32(0),
-                    CourseId = reader.GetInt64(1),
-                    CourseName = reader.GetString(2),
-                    LastUpdated = DateTime.Parse(reader.GetString(3),
-                        System.Globalization.CultureInfo.InvariantCulture,
-                        System.Globalization.DateTimeStyles.RoundtripKind),
-                    IsDeleted = reader.GetInt32(4) != 0,
-                    LastModifiedBy = reader.GetString(5)
-                };
-        }
-
-        if (current is not null &&
-            !string.Equals(current.CourseName, incoming.CourseName,
-                StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Course ID collision.");
-
-        CourseItem winner = current ?? incoming;
-        string outcome = current is null ? "Applied" : "ServerKept";
-        string details = current is null
-            ? "Course created on the server."
-            : "The Course ID already exists with the same name; server version kept.";
-
-        if (current is null)
-        {
-            using var save = connection.CreateCommand();
-            save.Transaction = transaction;
-            save.CommandText = """
-                INSERT INTO Courses
-                    (UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy)
-                VALUES ($userId, $courseId, $name, $updated, 0, $device);
-                """;
-            save.Parameters.AddWithValue("$userId", incoming.UserId);
-            save.Parameters.AddWithValue("$courseId", incoming.CourseId);
-            save.Parameters.AddWithValue("$name", incoming.CourseName);
-            save.Parameters.AddWithValue("$updated", incoming.LastUpdated.ToString("O"));
-            save.Parameters.AddWithValue("$device", incoming.LastModifiedBy);
-            save.ExecuteNonQuery();
-        }
-
-        using (var audit = connection.CreateCommand())
-        {
-            audit.Transaction = transaction;
-            audit.CommandText = """
-                INSERT INTO ReceivedChanges
-                (
-                    ClientChangeId, UserId, EntityChanged, ChangeType, AffectedId,
-                    TaskId, AssignmentId, CourseId, OldValue, NewValue, ReceivedAt,
-                    ChangedAtUtc, DeviceId, Outcome, Details, WasConflict, ServerValue
-                )
-                VALUES
-                (
-                    $id, $userId, 'Course', 'Create', $affectedId,
-                    NULL, NULL, $courseId, $old, $new, $received,
-                    $changed, $device, $outcome, $details, 0, $winner
-                );
-                """;
-            audit.Parameters.AddWithValue("$id", change.ClientChangeId);
-            audit.Parameters.AddWithValue("$userId", change.UserId);
-            audit.Parameters.AddWithValue("$affectedId", change.AffectedId);
-            audit.Parameters.AddWithValue("$courseId", change.AffectedId);
-            audit.Parameters.AddWithValue("$old", (object?)change.OldValue ?? DBNull.Value);
-            audit.Parameters.AddWithValue("$new", change.NewValue);
-            audit.Parameters.AddWithValue("$received", DateTime.UtcNow.ToString("O"));
-            audit.Parameters.AddWithValue("$changed", change.ChangedAtUtc.ToString("O"));
-            audit.Parameters.AddWithValue("$device", change.DeviceId);
-            audit.Parameters.AddWithValue("$outcome", outcome);
-            audit.Parameters.AddWithValue("$details", details);
-            audit.Parameters.AddWithValue("$winner", JsonSerializer.Serialize(winner));
-            audit.ExecuteNonQuery();
-        }
-
-        transaction.Commit();
-        return new SyncResult
-        {
-            ClientChangeId = change.ClientChangeId,
-            Outcome = outcome,
-            Details = details,
-            ServerCourse = winner
-        };
-    }
 }

@@ -1,11 +1,25 @@
 <Shell
     x:Class="ToTrak.App.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:ToTrak.App"
-    Title="ToTrak.App">
+    Title="ToTrak.App"
+    FlyoutBehavior="Disabled"
+    Shell.TabBarBackgroundColor="{AppThemeBinding Light=White, Dark=#1F1F1F}"
+    Shell.TabBarForegroundColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
+    Shell.TabBarTitleColor="{AppThemeBinding Light=#512BD4, Dark=#AC99EA}"
+    Shell.TabBarUnselectedColor="{AppThemeBinding Light=#6E6E6E, Dark=#ACACAC}">
 
-    <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <TabBar x:Name="WorkspaceTabs" Route="workspace">
+        <Tab x:Name="TasksTab" Title="Tasks" Icon="nav_tasks.png" Route="tasks">
+            <ShellContent x:Name="TasksContent" Title="Tasks" Route="tasksHome" />
+        </Tab>
+        <Tab Title="Assignments" Icon="nav_assignments.png" Route="assignments">
+            <ShellContent x:Name="AssignmentsContent" Title="Assignments" Route="assignmentsHome" />
+        </Tab>
+        <Tab Title="Courses" Icon="nav_courses.png" Route="courses">
+            <ShellContent x:Name="CoursesContent" Title="Courses" Route="coursesHome" />
+        </Tab>
+    </TabBar>
 
 </Shell>

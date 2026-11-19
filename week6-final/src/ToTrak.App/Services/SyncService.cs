@@ -23,9 +23,11 @@ public sealed class SyncService
             await database.GetPendingChangesAsync(userId);
 
         int sentCount = 0;
+        int collisions = 0;
 
-        foreach (var change in pendingChanges)
+        for (int index = 0; index < pendingChanges.Count; index++)
         {
+            var change = pendingChanges[index];
             try
             {
                 using var response =
@@ -35,6 +37,19 @@ public sealed class SyncService
                 {
                     string details =
                         await response.Content.ReadAsStringAsync();
+
+                    if (response.StatusCode == System.Net.HttpStatusCode.Conflict && change.ChangeType == "Create" && collisions < 5)
+                    {
+                        using var error = System.Text.Json.JsonDocument.Parse(details);
+                        if (error.RootElement.TryGetProperty("nextId", out var next) && next.TryGetInt64(out long nextId))
+                        {
+                            await database.ReassignCreatedItemAsync(change, nextId);
+                            pendingChanges = await database.GetPendingChangesAsync(userId);
+                            index = -1;
+                            collisions++;
+                            continue;
+                        }
+                    }
 
                     return (
                         sentCount,
@@ -55,6 +70,7 @@ public sealed class SyncService
                 await database.AcknowledgeChangeAsync(change, result);
 
                 sentCount++;
+                collisions = 0;
             }
             catch (Exception ex) when (
                 ex is HttpRequestException

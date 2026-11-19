@@ -1,163 +1,58 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
-<ContentPage
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:models="clr-namespace:ToTrak.App.Models"
-    x:Class="ToTrak.App.MainPage"
-    Title="ToTrak">
-
-    <Grid Padding="20"
-          RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto,*,*"
-          RowSpacing="12">
-
-        <Label Grid.Row="0"
-                Text="My Tasks and Assignments"
-               FontSize="28"
-               FontAttributes="Bold"/>
-
-        <Entry Grid.Row="1"
-       x:Name="TaskNameEntry"
-       Text="{Binding TaskName, Mode=TwoWay}"
-       Placeholder="Enter a task name"
-       AutomationId="TaskNameEntry"/>
-
-        <DatePicker Grid.Row="2"
-            x:Name="TaskDatePicker"
-            Date="{Binding TaskDate, Mode=TwoWay}"
-            AutomationId="TaskDatePicker"/>
-
-        <Button Grid.Row="3"
-        x:Name="AddTaskButton"
-        Text="Add Task"
-        Command="{Binding AddTaskCommand}"
-        AutomationId="AddTaskButton"/>
-        <Entry Grid.Row="4"
-               Text="{Binding AssignmentName, Mode=TwoWay}"
-               Placeholder="Enter an assignment name"
-               AutomationId="AssignmentNameEntry"/>
-
-        <DatePicker Grid.Row="5"
-                    Date="{Binding AssignmentDate, Mode=TwoWay}"
-                    AutomationId="AssignmentDatePicker"/>
-
-        <Picker Grid.Row="6"
-                Title="Select an existing course"
-                ItemsSource="{Binding Courses}"
-                ItemDisplayBinding="{Binding CourseName}"
-                SelectedItem="{Binding SelectedCourse, Mode=TwoWay}"
-                AutomationId="AssignmentCoursePicker"/>
-
-        <Entry Grid.Row="7"
-               Text="{Binding CourseName, Mode=TwoWay}"
-               Placeholder="Or enter a new course name"
-               AutomationId="NewCourseNameEntry"/>
-
-        <Button Grid.Row="8"
-                Text="Add Assignment"
-                Command="{Binding AddAssignmentCommand}"
-                AutomationId="AddAssignmentButton"/>
-
-        <VerticalStackLayout Grid.Row="9"
-                Spacing="8">
-            <Label x:Name="StatusLabel"
-       Text="{Binding StatusText}"/>
-
-            <Button x:Name="SyncNowButton"
-        Text="Sync Now"
-        Command="{Binding SyncNowCommand}"
-        AutomationId="SyncNowButton"/>
-
-            <Button Text="View Audit History"
-                    Clicked="OnViewAuditClicked"
-                    AutomationId="ViewAuditHistoryButton"/>
-        </VerticalStackLayout>
-
-        <CollectionView Grid.Row="10"
-                x:Name="TasksCollection"
-                ItemsSource="{Binding Tasks}"
-                SelectionMode="None"
-                EmptyView="No tasks yet. Add your first task."
-                AutomationId="TasksCollection">
-
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:TaskItem">
-                    <Border Padding="12"
-                            Margin="0,4">
-                        <VerticalStackLayout Spacing="4">
-
-                            <Label Text="{Binding TaskName}"
-                                   FontSize="18"
-                                   FontAttributes="Bold"/>
-
-                            <Label Text="{Binding TaskTime,
-                                        StringFormat='Date: {0:MMM dd, yyyy}'}"/>
-
-                            <Label Text="{Binding Completed,
-                                        StringFormat='Completed: {0}'}"/>
-                            <HorizontalStackLayout Spacing="8">
-
-                                <Button Text="Edit"
-        Command="{Binding BindingContext.EditTaskCommand,
-                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-        CommandParameter="{Binding .}"/>
-
-                                <Button Text="Toggle Done"
-        Command="{Binding BindingContext.ToggleTaskCommand,
-                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-        CommandParameter="{Binding .}"/>
-
-                                <Button Text="Delete"
-        Command="{Binding BindingContext.DeleteTaskCommand,
-                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-        CommandParameter="{Binding .}"
-        BackgroundColor="DarkRed"
-        TextColor="White"/>
-
-                            </HorizontalStackLayout>
-
-                        </VerticalStackLayout>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-
-        <CollectionView Grid.Row="11"
-                        ItemsSource="{Binding Assignments}"
-                        SelectionMode="None"
-                        EmptyView="No assignments yet. Add your first assignment."
-                        AutomationId="AssignmentsCollection">
-            <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="models:AssignmentDisplayItem">
-                    <Border Padding="12" Margin="0,4">
-                        <VerticalStackLayout Spacing="4">
-                            <Label Text="{Binding AssignmentName}"
-                                   FontSize="18"
-                                   FontAttributes="Bold"/>
-                            <Label Text="{Binding CourseName, StringFormat='Course: {0}'}"/>
-                            <Label Text="{Binding AssignmentTime,
-                                         StringFormat='Date: {0:MMM dd, yyyy}'}"/>
-                            <Label Text="{Binding Completed,
-                                         StringFormat='Completed: {0}'}"/>
-                            <HorizontalStackLayout Spacing="8">
-                                <Button Text="Edit Assignment"
-                                        Command="{Binding BindingContext.EditAssignmentCommand,
-                                                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                        CommandParameter="{Binding Assignment}"/>
-                                <Button Text="Toggle Done"
-                                        Command="{Binding BindingContext.ToggleAssignmentCommand,
-                                                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                        CommandParameter="{Binding Assignment}"/>
-                                <Button Text="Delete"
-                                        Command="{Binding BindingContext.DeleteAssignmentCommand,
-                                                  Source={RelativeSource AncestorType={x:Type ContentPage}}}"
-                                        CommandParameter="{Binding Assignment}"
-                                        BackgroundColor="DarkRed"
-                                        TextColor="White"/>
-                            </HorizontalStackLayout>
-                        </VerticalStackLayout>
-                    </Border>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:models="clr-namespace:ToTrak.App.Models"
+             x:Class="ToTrak.App.MainPage" Title="ToTrak"
+             Shell.TabBarIsVisible="{OnPlatform Default=True, WinUI=False}">
+    <ContentPage.Resources>
+        <Style x:Key="BottomNavigationButton" TargetType="Button">
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="ContentLayout" Value="Top,3" />
+            <Setter Property="MinimumHeightRequest" Value="56" />
+            <Setter Property="Padding" Value="4,6" />
+            <Setter Property="CornerRadius" Value="10" />
+            <Setter Property="BorderWidth" Value="0" />
+            <Setter Property="BackgroundColor" Value="Transparent" />
+        </Style>
+    </ContentPage.Resources>
+    <Grid Padding="20" RowDefinitions="Auto,*,Auto" RowSpacing="12">
+        <Label Text="{Binding Title, Source={RelativeSource AncestorType={x:Type ContentPage}}}" FontSize="28" FontAttributes="Bold" />
+        <ScrollView Grid.Row="1" x:Name="LoginPanel">
+            <VerticalStackLayout Spacing="12" MaximumWidthRequest="500" HorizontalOptions="Fill">
+                <Label Text="Sign in or create an account" FontSize="22" />
+                <Entry x:Name="UsernameEntry" Placeholder="Username" AutomationId="UsernameEntry" />
+                <Entry x:Name="PasswordEntry" Placeholder="Password (at least 8 characters)" IsPassword="True" AutomationId="PasswordEntry" />
+                <Button x:Name="SignInButton" Text="Sign In" Clicked="OnSignInClicked" />
+                <Button x:Name="RegisterButton" Text="Create Account" Clicked="OnRegisterClicked" />
+                <Label x:Name="LoginStatus" />
+            </VerticalStackLayout>
+        </ScrollView>
+        <Grid Grid.Row="1" x:Name="WorkspacePanel" IsVisible="False" RowDefinitions="Auto,Auto,Auto,*" RowSpacing="10">
+            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                <Label x:Name="AccountLabel" VerticalOptions="Center" />
+                <Button Grid.Column="1" Text="Sign Out" Clicked="OnSignOutClicked" />
+            </Grid>
+            <Label Grid.Row="1" Text="{Binding StatusText}" AutomationId="StatusLabel" />
+            <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="8">
+                <Button Text="Sync Now" Clicked="OnSyncNowClicked" AutomationId="SyncNowButton" />
+                <Button Grid.Column="1" Text="View Audit History" Clicked="OnViewAuditClicked" />
+            </Grid>
+            <ContentView Grid.Row="3" x:Name="WorkspaceBodyHost" />
+        </Grid>
+        <Border Grid.Row="2" IsVisible="{OnPlatform Default=False, WinUI=True}"
+                StrokeThickness="0" Padding="4,6"
+                BackgroundColor="{AppThemeBinding Light=White, Dark=#1F1F1F}">
+            <Grid ColumnDefinitions="*,*,*" ColumnSpacing="6">
+                <Button x:Name="TasksNavigationButton" Text="Tasks" ImageSource="nav_tasks.png"
+                        Style="{StaticResource BottomNavigationButton}" Clicked="OnTasksNavigationClicked"
+                        AutomationId="TasksNavigationButton" />
+                <Button Grid.Column="1" x:Name="AssignmentsNavigationButton" Text="Assignments" ImageSource="nav_assignments.png"
+                        Style="{StaticResource BottomNavigationButton}" Clicked="OnAssignmentsNavigationClicked"
+                        AutomationId="AssignmentsNavigationButton" />
+                <Button Grid.Column="2" x:Name="CoursesNavigationButton" Text="Courses" ImageSource="nav_courses.png"
+                        Style="{StaticResource BottomNavigationButton}" Clicked="OnCoursesNavigationClicked"
+                        AutomationId="CoursesNavigationButton" />
+            </Grid>
+        </Border>
     </Grid>
 </ContentPage>

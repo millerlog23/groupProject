@@ -50,6 +50,8 @@
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Remove="Resources\Images\NAVIGATION-ICONS-LICENSE.txt" />
+		<MauiImage Update="Resources\Images\nav_*.svg" BaseSize="24,24" />
 		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
 		
 		<!-- Custom Fonts -->

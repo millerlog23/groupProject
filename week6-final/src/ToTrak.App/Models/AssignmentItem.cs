@@ -9,6 +9,8 @@ public class AssignmentItem
     public int AssignmentLocation { get; set; }
     public DateTime AssignmentTime { get; set; }
     public string AssignmentType { get; set; } = string.Empty;
+    public string? AssignmentDescription { get; set; }
+    public int? EstimatedTime { get; set; }
     public bool Completed { get; set; }
     public DateTime LastUpdated { get; set; }
     public bool IsDeleted { get; set; }
@@ -23,6 +25,8 @@ public class AssignmentItem
         AssignmentLocation = AssignmentLocation,
         AssignmentTime = AssignmentTime,
         AssignmentType = AssignmentType,
+        AssignmentDescription = AssignmentDescription,
+        EstimatedTime = EstimatedTime,
         Completed = Completed,
         LastUpdated = LastUpdated,
         IsDeleted = IsDeleted,

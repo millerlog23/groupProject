@@ -20,6 +20,8 @@ public sealed class ServerChange
 
     public long? CourseId { get; set; }
 
+    public int? LocationId { get; set; }
+
     public string? NewValue { get; set; }
 
     public string ReceivedAt { get; set; } = string.Empty;

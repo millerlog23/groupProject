@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<local:MainPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+                xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+                xmlns:local="clr-namespace:ToTrak.App"
+                xmlns:models="clr-namespace:ToTrak.App.Models"
+                x:Class="ToTrak.App.CoursesPage"
+                Title="Courses">
+    <local:MainPage.WorkspaceBody>
+        <ScrollView>
+            <VerticalStackLayout Spacing="12">
+                <Button Text="Add Course" Clicked="OnAddCourseClicked" />
+                <VerticalStackLayout BindableLayout.ItemsSource="{Binding Courses}" BindableLayout.EmptyView="No courses yet.">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate x:DataType="models:CourseItem">
+                            <Border Padding="12" Margin="0,4">
+                                <VerticalStackLayout Spacing="4">
+                                    <Label Text="{Binding CourseName}" FontSize="18" />
+                                    <Label Text="{Binding CourseDescription}" />
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Button Text="Edit" Clicked="OnEditCourseClicked" CommandParameter="{Binding .}" />
+                                        <Button Text="Delete" Clicked="OnDeleteCourseClicked" CommandParameter="{Binding .}" />
+                                    </HorizontalStackLayout>
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </VerticalStackLayout>
+            </VerticalStackLayout>
+        </ScrollView>
+    </local:MainPage.WorkspaceBody>
+</local:MainPage>

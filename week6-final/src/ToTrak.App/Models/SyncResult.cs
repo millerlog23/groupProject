@@ -10,5 +10,6 @@ public sealed class SyncResult
     public string Details { get; set; } = string.Empty;
     public TaskItem? ServerTask { get; set; }
     public AssignmentItem? ServerAssignment { get; set; }
+    public LocationItem? ServerLocation { get; set; }
     public CourseItem? ServerCourse { get; set; }
 }

@@ -2,180 +2,33 @@ using ToTrak.App.Models;
 using Microsoft.Maui.Storage;
 using SQLite;
 using System.Text.Json;
-using System.Net.Http.Json;
-using Microsoft.Maui.Networking;
 
 namespace ToTrak.App.Data;
 
-public class TaskDatabase
+public partial class TaskDatabase
 {
     private readonly SQLiteAsyncConnection database;
 
-    private readonly string deviceId = GetOrCreateDeviceId();
+    private readonly string deviceId;
+    private static readonly SemaphoreSlim InitializationLock = new(1, 1);
+    private bool initialized;
 
-    public TaskDatabase()
+    public TaskDatabase(string? databasePath = null, string? deviceId = null)
     {
-        string databasePath = Path.Combine(
-            FileSystem.AppDataDirectory,
-            "totrak-week5.db3");
-
-        database = new SQLiteAsyncConnection(databasePath);
+        this.deviceId = deviceId ?? GetOrCreateDeviceId();
+        database = new SQLiteAsyncConnection(databasePath ?? Path.Combine(FileSystem.AppDataDirectory, "totrak-week5.db3"));
     }
 
     public async Task InitializeAsync()
     {
-        await database.ExecuteAsync("""
-            CREATE TABLE IF NOT EXISTS TaskItem
-            (
-                UserId INTEGER NOT NULL,
-                TaskId INTEGER NOT NULL,
-                TaskName TEXT NOT NULL,
-                TaskLocation INTEGER NOT NULL,
-                TaskTime INTEGER NOT NULL,
-                TaskType TEXT NOT NULL,
-                Completed INTEGER NOT NULL,
-                LastUpdated INTEGER NOT NULL,
-                PRIMARY KEY (UserId, TaskId)
-            );
-            """);
-
-        await database.ExecuteAsync("""
-            CREATE TABLE IF NOT EXISTS CourseItem
-            (
-                UserId INTEGER NOT NULL,
-                CourseId INTEGER NOT NULL,
-                CourseName TEXT NOT NULL,
-                LastUpdated INTEGER NOT NULL,
-                IsDeleted INTEGER NOT NULL DEFAULT 0,
-                LastModifiedBy TEXT NOT NULL DEFAULT '',
-                PRIMARY KEY (UserId, CourseId)
-            );
-
-            CREATE TABLE IF NOT EXISTS AssignmentItem
-            (
-                UserId INTEGER NOT NULL,
-                AssignmentId INTEGER NOT NULL,
-                AssignmentName TEXT NOT NULL,
-                CourseId INTEGER NOT NULL,
-                AssignmentLocation INTEGER NOT NULL,
-                AssignmentTime INTEGER NOT NULL,
-                AssignmentType TEXT NOT NULL,
-                Completed INTEGER NOT NULL,
-                LastUpdated INTEGER NOT NULL,
-                IsDeleted INTEGER NOT NULL DEFAULT 0,
-                LastModifiedBy TEXT NOT NULL DEFAULT '',
-                PRIMARY KEY (UserId, AssignmentId)
-            );
-            """);
-
-        await database.ExecuteAsync("""
-            CREATE TABLE IF NOT EXISTS PendingAuditChange
-            (
-                ClientChangeId TEXT PRIMARY KEY,
-                UserId INTEGER NOT NULL,
-                EntityChanged TEXT NOT NULL,
-                ChangeType TEXT NOT NULL,
-                AffectedId INTEGER NOT NULL,
-                OldValue TEXT NULL,
-                NewValue TEXT NULL
-            );
-            """);
-        // Upgrade existing Week 4 databases without deleting their data.
-        await EnsureColumnAsync(
-            "TaskItem", "IsDeleted",
-            "INTEGER NOT NULL DEFAULT 0");
-
-        await EnsureColumnAsync(
-            "TaskItem", "LastModifiedBy",
-            "TEXT NOT NULL DEFAULT ''");
-
-        await EnsureColumnAsync(
-            "AssignmentItem", "CourseId", "INTEGER NOT NULL DEFAULT 1");
-
-        await database.ExecuteAsync(
-            """
-            INSERT OR IGNORE INTO CourseItem
-                (UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy)
-            SELECT DISTINCT UserId, 1, 'Unassigned', ?, 0, ?
-            FROM AssignmentItem WHERE CourseId = 1;
-            """,
-            DateTime.UtcNow.Ticks,
-            deviceId);
-
-        await EnsureColumnAsync(
-            "PendingAuditChange", "ChangedAtUtc",
-            "INTEGER NOT NULL DEFAULT 0");
-
-        await EnsureColumnAsync(
-            "PendingAuditChange", "BaseLastUpdatedUtc",
-            "INTEGER NULL");
-
-        await EnsureColumnAsync(
-            "PendingAuditChange", "DeviceId",
-            "TEXT NOT NULL DEFAULT ''");
-
-        await EnsureColumnAsync(
-            "PendingAuditChange", "TaskId", "INTEGER NULL");
-
-        await EnsureColumnAsync(
-            "PendingAuditChange", "AssignmentId", "INTEGER NULL");
-
-        await EnsureColumnAsync(
-            "PendingAuditChange", "CourseId", "INTEGER NULL");
-
-        await database.ExecuteAsync("""
-            UPDATE PendingAuditChange
-            SET TaskId = AffectedId
-            WHERE EntityChanged = 'Task' AND TaskId IS NULL;
-            UPDATE PendingAuditChange
-            SET AssignmentId = AffectedId
-            WHERE EntityChanged = 'Assignment' AND AssignmentId IS NULL;
-            UPDATE PendingAuditChange
-            SET CourseId = AffectedId
-            WHERE EntityChanged = 'Course' AND CourseId IS NULL;
-            """);
-        await MigratePendingAssignmentSnapshotsAsync();
-
-        // Permanent history: these records remain after successful sync.
-        await database.ExecuteAsync("""
-    CREATE TABLE IF NOT EXISTS AuditLog
-    (
-        AuditId TEXT PRIMARY KEY,
-        UserId INTEGER NOT NULL,
-        TaskId INTEGER NULL,
-        AssignmentId INTEGER NULL,
-        CourseId INTEGER NULL,
-        Action TEXT NOT NULL,
-        OldValue TEXT NULL,
-        NewValue TEXT NULL,
-        OccurredAtUtc INTEGER NOT NULL,
-        DeviceId TEXT NOT NULL,
-        Outcome TEXT NOT NULL,
-        Details TEXT NOT NULL,
-        IsSynced INTEGER NOT NULL DEFAULT 0,
-        CHECK (
-            (TaskId IS NOT NULL AND AssignmentId IS NULL AND CourseId IS NULL) OR
-            (TaskId IS NULL AND AssignmentId IS NOT NULL AND CourseId IS NULL) OR
-            (TaskId IS NULL AND AssignmentId IS NULL AND CourseId IS NOT NULL)
-        )
-    );
-    
-    """);
-        await EnsureColumnAsync("AuditLog", "AssignmentId", "INTEGER NULL");
-        await EnsureColumnAsync("AuditLog", "CourseId", "INTEGER NULL");
-        await MigrateAuditLogForAssignmentsAsync();
-        // Store synchronization results separately.
-        // Original audit records must remain unchanged.
-        await database.ExecuteAsync("""
-    CREATE TABLE IF NOT EXISTS AuditSyncReceipt
-    (
-        AuditId TEXT PRIMARY KEY,
-        UserId INTEGER NOT NULL,
-        Outcome TEXT NOT NULL,
-        Details TEXT NOT NULL,
-        SyncedAtUtc INTEGER NOT NULL
-    );
-    """);
+        await InitializationLock.WaitAsync();
+        try
+        {
+            if (initialized) return;
+            await InitializeSchemaAsync();
+            initialized = true;
+        }
+        finally { InitializationLock.Release(); }
     }
 
     private async Task MigratePendingAssignmentSnapshotsAsync()
@@ -219,59 +72,6 @@ public class TaskDatabase
         }
     }
 
-    private async Task MigrateAuditLogForAssignmentsAsync()
-    {
-        int taskIdIsRequired = await database.ExecuteScalarAsync<int>(
-            "SELECT COUNT(*) FROM pragma_table_info('AuditLog') " +
-            "WHERE name = 'TaskId' AND notnull = 1");
-        string? schema = await database.ExecuteScalarAsync<string?>(
-            "SELECT sql FROM sqlite_master WHERE type = 'table' AND name = 'AuditLog'");
-        bool supportsCourseId = schema?.Contains(
-            "CourseId IS NOT NULL", StringComparison.OrdinalIgnoreCase) == true;
-
-        if (taskIdIsRequired == 0 && supportsCourseId)
-            return;
-
-        await database.ExecuteAsync("""
-            DROP TABLE IF EXISTS AuditLog_CourseUpgrade;
-            CREATE TABLE AuditLog_CourseUpgrade
-            (
-                AuditId TEXT PRIMARY KEY,
-                UserId INTEGER NOT NULL,
-                TaskId INTEGER NULL,
-                AssignmentId INTEGER NULL,
-                CourseId INTEGER NULL,
-                Action TEXT NOT NULL,
-                OldValue TEXT NULL,
-                NewValue TEXT NULL,
-                OccurredAtUtc INTEGER NOT NULL,
-                DeviceId TEXT NOT NULL,
-                Outcome TEXT NOT NULL,
-                Details TEXT NOT NULL,
-                IsSynced INTEGER NOT NULL DEFAULT 0,
-                CHECK (
-                    (TaskId IS NOT NULL AND AssignmentId IS NULL AND CourseId IS NULL) OR
-                    (TaskId IS NULL AND AssignmentId IS NOT NULL AND CourseId IS NULL) OR
-                    (TaskId IS NULL AND AssignmentId IS NULL AND CourseId IS NOT NULL)
-                )
-            );
-
-            INSERT INTO AuditLog_CourseUpgrade
-            (
-                AuditId, UserId, TaskId, AssignmentId, CourseId, Action,
-                OldValue, NewValue, OccurredAtUtc, DeviceId,
-                Outcome, Details, IsSynced
-            )
-            SELECT
-                AuditId, UserId, TaskId, AssignmentId, CourseId, Action,
-                OldValue, NewValue, OccurredAtUtc, DeviceId,
-                Outcome, Details, IsSynced
-            FROM AuditLog;
-
-            DROP TABLE AuditLog;
-            ALTER TABLE AuditLog_CourseUpgrade RENAME TO AuditLog;
-            """);
-    }
     private static string GetOrCreateDeviceId()
     {
         string id = Preferences.Get("ToTrak.DeviceId", "");
@@ -545,14 +345,16 @@ public class TaskDatabase
                     continue;
 
                 if (change.UserId != userId ||
-                    change.EntityChanged is not ("Task" or "Assignment" or "Course") ||
+                    change.EntityChanged is not ("Task" or "Assignment" or "Course" or "Location") ||
                     change.AffectedId <= 0 ||
                     (change.EntityChanged == "Task" &&
-                        (change.TaskId != change.AffectedId || change.AssignmentId is not null || change.CourseId is not null)) ||
+                        (change.TaskId != change.AffectedId || change.AssignmentId is not null || change.CourseId is not null || change.LocationId is not null)) ||
                     (change.EntityChanged == "Assignment" &&
-                        (change.AssignmentId != change.AffectedId || change.TaskId is not null || change.CourseId is not null)) ||
+                        (change.AssignmentId != change.AffectedId || change.TaskId is not null || change.CourseId is not null || change.LocationId is not null)) ||
                     (change.EntityChanged == "Course" &&
-                        (change.CourseId != change.AffectedId || change.TaskId is not null || change.AssignmentId is not null)) ||
+                        (change.CourseId != change.AffectedId || change.TaskId is not null || change.AssignmentId is not null || change.LocationId is not null)) ||
+                    (change.EntityChanged == "Location" &&
+                        (change.LocationId != change.AffectedId || change.TaskId is not null || change.AssignmentId is not null || change.CourseId is not null)) ||
                     change.ChangeType is not ("Create" or "Update" or "Delete"))
                 {
                     throw new InvalidOperationException(
@@ -574,6 +376,14 @@ public class TaskDatabase
                     break;
                 }
 
+                if (change.EntityChanged == "Location")
+                {
+                    ApplyLocationSnapshot(connection, userId, change.AffectedId, change.NewValue, change.ChangeType);
+                    cursor = change.ServerChangeId;
+                    applied++;
+                    continue;
+                }
+
                 // Old Week 4 deletion records did not contain a snapshot.
                 // Replay their deletion without removing the local row.
                 if (change.ChangeType == "Delete" &&
@@ -581,7 +391,7 @@ public class TaskDatabase
                 {
                     string tableName = change.EntityChanged == "Task"
                         ? "TaskItem"
-                        : "AssignmentItem";
+                        : change.EntityChanged == "Assignment" ? "AssignmentItem" : "CourseItem";
                     string idColumn = change.EntityChanged == "Task"
                         ? "TaskId"
                         : change.EntityChanged == "Assignment"
@@ -626,8 +436,8 @@ public class TaskDatabase
                     connection.Execute(
                         """
                         INSERT OR IGNORE INTO CourseItem
-                        (UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy)
-                        VALUES (?, 1, 'Unassigned', ?, 0, '')
+                        (UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy, CourseDescription)
+                        VALUES (?, 1, 'Unassigned', ?, 0, '', NULL)
                         """,
                         userId,
                         DateTime.UtcNow.Ticks);
@@ -636,7 +446,7 @@ public class TaskDatabase
                         "SELECT COUNT(*) FROM CourseItem WHERE UserId = ? AND CourseId = ? AND IsDeleted = 0",
                         userId,
                         assignment.CourseId);
-                    if (courseExists != 1)
+                    if (!assignment.IsDeleted && courseExists != 1)
                         throw new InvalidOperationException(
                             "The assignment references a course that is not available locally.");
 
@@ -647,12 +457,14 @@ public class TaskDatabase
                             UserId, AssignmentId, AssignmentName, CourseId,
                             AssignmentLocation, AssignmentTime,
                             AssignmentType, Completed, LastUpdated,
-                            IsDeleted, LastModifiedBy
+                            IsDeleted, LastModifiedBy, AssignmentDescription, EstimatedTime
                         )
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                         ON CONFLICT(UserId, AssignmentId) DO UPDATE SET
                             AssignmentName = excluded.AssignmentName,
-                            CourseId = excluded.CourseId,
+                        CourseId = excluded.CourseId,
+                        AssignmentDescription = excluded.AssignmentDescription,
+                        EstimatedTime = excluded.EstimatedTime,
                             AssignmentLocation = excluded.AssignmentLocation,
                             AssignmentTime = excluded.AssignmentTime,
                             AssignmentType = excluded.AssignmentType,
@@ -671,7 +483,9 @@ public class TaskDatabase
                         assignment.Completed,
                         assignment.LastUpdated,
                         assignment.IsDeleted,
-                        assignment.LastModifiedBy);
+                        assignment.LastModifiedBy,
+                        assignment.AssignmentDescription,
+                        assignment.EstimatedTime);
 
                     cursor = change.ServerChangeId;
                     applied++;
@@ -692,16 +506,17 @@ public class TaskDatabase
                     if (course is null || course.UserId != userId ||
                         course.CourseId != change.AffectedId ||
                         string.IsNullOrWhiteSpace(course.CourseName) ||
-                        course.LastUpdated == default || course.IsDeleted)
+                        course.LastUpdated == default || course.IsDeleted != (change.ChangeType == "Delete"))
                         throw new InvalidOperationException("Invalid downloaded course data.");
 
                     connection.Execute(
                         """
                         INSERT INTO CourseItem
-                        (UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy)
-                        VALUES (?, ?, ?, ?, ?, ?)
+                        (UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy, CourseDescription)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
                         ON CONFLICT(UserId, CourseId) DO UPDATE SET
                             CourseName = excluded.CourseName,
+                            CourseDescription = excluded.CourseDescription,
                             LastUpdated = excluded.LastUpdated,
                             IsDeleted = excluded.IsDeleted,
                             LastModifiedBy = excluded.LastModifiedBy;
@@ -711,7 +526,8 @@ public class TaskDatabase
                         course.CourseName,
                         course.LastUpdated,
                         course.IsDeleted,
-                        course.LastModifiedBy);
+                        course.LastModifiedBy,
+                        course.CourseDescription);
 
                     cursor = change.ServerChangeId;
                     applied++;
@@ -795,20 +611,8 @@ public class TaskDatabase
 
         await database.RunInTransactionAsync(connection =>
         {
-            // Generate a positive 63-bit ID and check this device's database.
-            do
-            {
-                byte[] bytes =
-                    System.Security.Cryptography.RandomNumberGenerator.GetBytes(8);
-
-                task.TaskId = BitConverter.ToInt64(bytes, 0) & long.MaxValue;
-            }
-            while (
-                task.TaskId == 0 ||
-                connection.ExecuteScalar<int>(
-                    "SELECT COUNT(*) FROM TaskItem WHERE UserId = ? AND TaskId = ?",
-                    task.UserId,
-                    task.TaskId) > 0);
+            task.TaskId = NextId(connection, "TaskItem", "TaskId", task.UserId);
+            ValidateTask(connection, task);
 
             task.LastUpdated = DateTime.UtcNow;
             task.LastModifiedBy = deviceId;
@@ -883,47 +687,29 @@ public class TaskDatabase
                         LastModifiedBy = deviceId
                     };
 
-                    do
-                    {
-                        byte[] bytes =
-                            System.Security.Cryptography.RandomNumberGenerator.GetBytes(8);
-                        course.CourseId = BitConverter.ToInt64(bytes, 0) & long.MaxValue;
-                    }
-                    while (course.CourseId == 0 || connection.ExecuteScalar<int>(
-                        "SELECT COUNT(*) FROM CourseItem WHERE UserId = ? AND CourseId = ?",
-                        course.UserId,
-                        course.CourseId) > 0);
+                    course.CourseId = NextId(connection, "CourseItem", "CourseId", course.UserId);
 
                     connection.Execute(
                         """
                         INSERT INTO CourseItem
-                        (UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy)
-                        VALUES (?, ?, ?, ?, ?, ?)
+                        (UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy, CourseDescription)
+                        VALUES (?, ?, ?, ?, ?, ?, ?)
                         """,
                         course.UserId,
                         course.CourseId,
                         course.CourseName,
                         course.LastUpdated,
                         course.IsDeleted,
-                        course.LastModifiedBy);
+                        course.LastModifiedBy,
+                        course.CourseDescription);
                     RecordLocalChange(connection, "Create", course, null);
                     courseId = course.CourseId;
                 }
             }
 
             assignment.CourseId = courseId;
-            do
-            {
-                byte[] bytes =
-                    System.Security.Cryptography.RandomNumberGenerator.GetBytes(8);
-                assignment.AssignmentId = BitConverter.ToInt64(bytes, 0) & long.MaxValue;
-            }
-            while (
-                assignment.AssignmentId == 0 ||
-                connection.ExecuteScalar<int>(
-                    "SELECT COUNT(*) FROM AssignmentItem WHERE UserId = ? AND AssignmentId = ?",
-                    assignment.UserId,
-                    assignment.AssignmentId) > 0);
+            assignment.AssignmentId = NextId(connection, "AssignmentItem", "AssignmentId", assignment.UserId);
+            ValidateAssignment(connection, assignment);
 
             assignment.LastUpdated = DateTime.UtcNow;
             assignment.LastModifiedBy = deviceId;
@@ -935,9 +721,9 @@ public class TaskDatabase
                 (
                     UserId, AssignmentId, AssignmentName, CourseId,
                     AssignmentLocation, AssignmentTime, AssignmentType,
-                    Completed, LastUpdated, IsDeleted, LastModifiedBy
+                    Completed, LastUpdated, IsDeleted, LastModifiedBy, AssignmentDescription, EstimatedTime
                 )
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """,
                 assignment.UserId,
                 assignment.AssignmentId,
@@ -949,7 +735,9 @@ public class TaskDatabase
                 assignment.Completed,
                 assignment.LastUpdated,
                 assignment.IsDeleted,
-                assignment.LastModifiedBy);
+                assignment.LastModifiedBy,
+                        assignment.AssignmentDescription,
+                        assignment.EstimatedTime);
 
             RecordLocalChange(connection, "Create", assignment, null);
         });
@@ -975,6 +763,7 @@ public class TaskDatabase
             a.TaskId,
             a.AssignmentId,
             a.CourseId,
+            a.LocationId,
             a.Action,
             a.OldValue,
             a.NewValue,
@@ -1080,6 +869,8 @@ public class TaskDatabase
 
         bool validWinner = change.EntityChanged switch
         {
+            "Location" => result.ServerLocation is { } location && location.UserId == change.UserId &&
+              location.LocationId == change.AffectedId && location.LastUpdated != default && !string.IsNullOrWhiteSpace(location.LocationName),
             "Assignment" => assignmentWinner is not null &&
               assignmentWinner.UserId == change.UserId &&
               assignmentWinner.AssignmentId == change.AffectedId &&
@@ -1144,6 +935,7 @@ public class TaskDatabase
                 change.UserId,
                 result.Outcome,
                 (result.WasConflict ? "Conflict resolved. " : "") +
+                    (change.OriginalAffectedId.HasValue ? $"Client ID {change.OriginalAffectedId} reassigned to {change.AffectedId} after a collision. " : "") +
                     result.Details,
                 DateTime.UtcNow.Ticks);
 
@@ -1168,26 +960,36 @@ public class TaskDatabase
             if (remaining > 0)
                 return;
 
+            if (change.EntityChanged == "Location")
+            {
+                var location = result.ServerLocation!;
+                ApplyLocationSnapshot(connection, change.UserId, change.AffectedId, JsonSerializer.Serialize(location), location.IsDeleted ? "Delete" : "Update");
+                return;
+            }
+
             if (change.EntityChanged == "Course")
             {
                 connection.Execute(
                     """
                     INSERT INTO CourseItem
-                    (UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy)
-                    VALUES (?, ?, ?, ?, ?, ?)
+                    (UserId, CourseId, CourseName, LastUpdated, IsDeleted, LastModifiedBy, CourseDescription)
+                    VALUES (?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(UserId, CourseId) DO UPDATE SET
                         CourseName = excluded.CourseName,
+                            CourseDescription = excluded.CourseDescription,
                         LastUpdated = excluded.LastUpdated,
                         IsDeleted = excluded.IsDeleted,
                         LastModifiedBy = excluded.LastModifiedBy
-                    WHERE excluded.LastUpdated >= CourseItem.LastUpdated;
+                    WHERE excluded.LastUpdated >= CourseItem.LastUpdated OR CourseItem.LastUpdated = ?;
                     """,
                     courseWinner!.UserId,
                     courseWinner.CourseId,
                     courseWinner.CourseName,
                     courseWinner.LastUpdated,
                     courseWinner.IsDeleted,
-                    courseWinner.LastModifiedBy);
+                    courseWinner.LastModifiedBy,
+                    courseWinner.CourseDescription,
+                    change.ChangedAtUtc);
                 return;
             }
 
@@ -1197,14 +999,17 @@ public class TaskDatabase
                     """
                     INSERT INTO AssignmentItem
                     (
-                        UserId, AssignmentId, AssignmentName,
+                        UserId, AssignmentId, AssignmentName, CourseId,
                         AssignmentLocation, AssignmentTime,
                         AssignmentType, Completed, LastUpdated,
-                        IsDeleted, LastModifiedBy
+                        IsDeleted, LastModifiedBy, AssignmentDescription, EstimatedTime
                     )
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                     ON CONFLICT(UserId, AssignmentId) DO UPDATE SET
                         AssignmentName = excluded.AssignmentName,
+                        CourseId = excluded.CourseId,
+                        AssignmentDescription = excluded.AssignmentDescription,
+                        EstimatedTime = excluded.EstimatedTime,
                         AssignmentLocation = excluded.AssignmentLocation,
                         AssignmentTime = excluded.AssignmentTime,
                         AssignmentType = excluded.AssignmentType,
@@ -1217,13 +1022,16 @@ public class TaskDatabase
                     assignmentWinner!.UserId,
                     assignmentWinner.AssignmentId,
                     assignmentWinner.AssignmentName,
+                    assignmentWinner.CourseId,
                     assignmentWinner.AssignmentLocation,
                     assignmentWinner.AssignmentTime,
                     assignmentWinner.AssignmentType,
                     assignmentWinner.Completed,
                     assignmentWinner.LastUpdated,
                     assignmentWinner.IsDeleted,
-                    assignmentWinner.LastModifiedBy);
+                    assignmentWinner.LastModifiedBy,
+                    assignmentWinner.AssignmentDescription,
+                    assignmentWinner.EstimatedTime);
                 return;
             }
 
@@ -1274,15 +1082,19 @@ public class TaskDatabase
 
         await database.RunInTransactionAsync(connection =>
         {
+            ValidateAssignment(connection, assignment);
             int updated = connection.Execute(
                 """
                 UPDATE AssignmentItem
-                SET AssignmentName = ?, AssignmentLocation = ?,
+                SET AssignmentName = ?, CourseId = ?, AssignmentDescription = ?, EstimatedTime = ?, AssignmentLocation = ?,
                     AssignmentTime = ?, AssignmentType = ?, Completed = ?,
                     LastUpdated = ?, IsDeleted = ?, LastModifiedBy = ?
                 WHERE UserId = ? AND AssignmentId = ? AND IsDeleted = 0
                 """,
                 assignment.AssignmentName,
+                assignment.CourseId,
+                assignment.AssignmentDescription,
+                assignment.EstimatedTime,
                 assignment.AssignmentLocation,
                 assignment.AssignmentTime,
                 assignment.AssignmentType,
@@ -1354,6 +1166,7 @@ public class TaskDatabase
 
         await database.RunInTransactionAsync(connection =>
         {
+            ValidateTask(connection, task);
             int updated = connection.Execute(
                 """
             UPDATE TaskItem

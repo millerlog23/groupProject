@@ -6,7 +6,7 @@ using ToTrak.Api.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-string databasePath = Path.Combine(
+string databasePath = builder.Configuration["DatabasePath"] ?? Path.Combine(
     builder.Environment.ContentRootPath,
     "totrak-server-week5.db");
 
@@ -17,6 +17,41 @@ builder.Services.AddSingleton(database);
 
 var app = builder.Build();
 
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path == "/" || context.Request.Path == "/health" ||
+        context.Request.Path == "/auth/register" || context.Request.Path == "/auth/login")
+    {
+        await next();
+        return;
+    }
+    string authorization = context.Request.Headers.Authorization.ToString();
+    int? userId = authorization.StartsWith("Bearer ", StringComparison.Ordinal)
+        ? database.Authenticate(authorization[7..]) : null;
+    if (userId is null)
+    {
+        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+        return;
+    }
+    context.Items["UserId"] = userId.Value;
+    await next();
+});
+
+app.MapPost("/auth/register", (Credentials credentials, ServerDatabase database) =>
+{
+    try { return Results.Ok(database.Register(credentials)); }
+    catch (ArgumentException ex) { return Results.BadRequest(new { error = ex.Message }); }
+    catch (SqliteException ex) when (ex.SqliteErrorCode == 19)
+    { return Results.Conflict(new { error = "That username is already registered." }); }
+});
+app.MapPost("/auth/login", IResult (Credentials credentials, ServerDatabase database) =>
+    database.Login(credentials) is { } session ? Results.Ok(session) : Results.Unauthorized());
+app.MapPost("/auth/logout", (HttpContext context, ServerDatabase database) =>
+{
+    database.Logout(context.Request.Headers.Authorization.ToString()[7..]);
+    return Results.NoContent();
+});
+
 app.MapGet("/", () => "ToTrak API is running.");
 
 app.MapGet("/health", () => Results.Ok(new
@@ -26,9 +61,9 @@ app.MapGet("/health", () => Results.Ok(new
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapGet("/debug/db", (ServerDatabase database) =>
+    app.MapGet("/debug/db", (ServerDatabase database, HttpContext context) =>
         Results.Content(
-            BuildDebugDbHtml(database.GetDebugSnapshot()),
+            BuildDebugDbHtml(database.GetDebugSnapshot((int)context.Items["UserId"]!)),
             "text/html; charset=utf-8"));
 }
 
@@ -42,8 +77,10 @@ app.MapGet("/changes",
         int userId,
         long? after,
         DateTimeOffset? since,
+        HttpContext context,
         ServerDatabase database) =>
     {
+        if (userId != (int)context.Items["UserId"]!) return Results.StatusCode(403);
         if (userId <= 0 || after < 0)
         {
             return Results.BadRequest(new
@@ -60,8 +97,9 @@ app.MapGet("/changes",
         return Results.Ok(changes);
     });
 app.MapGet("/audit",
-IResult (int userId, ServerDatabase database) =>
+IResult (int userId, ServerDatabase database, HttpContext context) =>
 {
+    if (userId != (int)context.Items["UserId"]!) return Results.StatusCode(403);
     if (userId <= 0)
     {
         return Results.BadRequest(new
@@ -73,7 +111,22 @@ IResult (int userId, ServerDatabase database) =>
     return Results.Ok(database.GetAuditHistory(userId));
 });
 
-app.Run();
+try
+{
+    await app.RunAsync();
+}
+catch (IOException ex) when (ex.InnerException is Microsoft.AspNetCore.Connections.AddressInUseException)
+{
+    Console.Error.WriteLine("ToTrak API could not start: its address is already in use. Stop the other API instance or choose a different --urls address.");
+    Environment.ExitCode = 1;
+}
+catch (Exception ex)
+{
+    // Report hosting failures without raising a native Windows crash dialog.
+    // Console output also works when Windows Event Log access is unavailable.
+    Console.Error.WriteLine($"ToTrak API could not run: {ex.GetBaseException().Message}");
+    Environment.ExitCode = 1;
+}
 
 static string BuildDebugDbHtml(
     Dictionary<string, List<Dictionary<string, object?>>> snapshot)
@@ -146,8 +199,10 @@ static string BuildDebugDbHtml(
 
 static IResult HandlePush(
     PendingAuditChange change,
+    HttpContext context,
     ServerDatabase database)
 {
+    if (change.UserId != (int)context.Items["UserId"]!) return Results.StatusCode(403);
     try
     {
         var result = database.ApplyChange(change);
@@ -166,6 +221,8 @@ static IResult HandlePush(
     }
     catch (InvalidOperationException ex)
     {
+        if (change.ChangeType == "Create" && ex.Message.Contains("ID collision", StringComparison.OrdinalIgnoreCase))
+            return Results.Conflict(new { error = ex.Message, nextId = database.GetNextEntityId(change.UserId, change.EntityChanged) });
         return Results.Conflict(new { error = ex.Message });
     }
     catch (SqliteException ex) when (ex.SqliteErrorCode == 19)
